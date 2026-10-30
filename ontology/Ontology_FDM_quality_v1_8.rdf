@@ -1,0 +1,3124 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://www.wcu.edu/ontology/fdm-quality"
+         xmlns="http://www.wcu.edu/ontology/fdm-quality#"
+         xmlns:swrl="http://www.w3.org/2003/11/swrl#">
+
+<owl:Ontology rdf:about="http://www.wcu.edu/ontology/fdm-quality">
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FDM process-parameter-based quality classification ontology, version 1.8 (v1.8: the nominal closure of v1.7 is replaced by a coversAssessment max-cardinality axiom and rules R8/R9, which infer ProcessRecommendation and NotRecommendedSetting; decision-support layer: three application profiles Req01-Req03, a dimension-only requirement class with rule R1b, and PrusaSlicer print-time and filament estimates per setting for ranking; the ranking, closest-miss and suitability queries are in fdm_dss.py). Populated from a replicated Taguchi L9 experiment on PLA (18 specimens). Each result is judged against each requirement through a QualityAssessment, so several requirements coexist; SWRL rules R1-R5 read all limits from the requirement individuals and infer the outcome and the exceeded characteristic. Setting evaluations carry a max-cardinality axiom over the printed replicates; R8 infers ProcessRecommendation (both replicates acceptable) and R9 NotRecommendedSetting (at least one defective replicate). Numeric values are xsd:decimal. Top-face Ra values were re-evaluated from the raw profiles at ISO 21920-3 setting class Sc4 (lc 2.5 mm, ln 12.5 mm), the class that applies to a 5 um Ra limit; S01 keeps its reported value because its raw profile was not supplied. Defect classes and tensileStrengthValue are placeholders: no defect inspection or tensile testing was performed.</rdfs:comment>
+  <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1.8</owl:versionInfo>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FDM Process-Parameter-Based Quality Classification Ontology</rdfs:label>
+</owl:Ontology>
+
+<owl:ObjectProperty rdf:about="#usesProcess">
+  <rdfs:domain rdf:resource="#ParameterSetting"/>
+  <rdfs:range rdf:resource="#AMProcess"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#usesMaterial">
+  <rdfs:domain rdf:resource="#ParameterSetting"/>
+  <rdfs:range rdf:resource="#Material"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasParameterSetting">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Specimen"/>
+  <rdfs:range rdf:resource="#ParameterSetting"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#printedOnMachine">
+  <rdfs:domain rdf:resource="#Specimen"/>
+  <rdfs:range rdf:resource="#Machine"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasResult">
+  <rdfs:domain rdf:resource="#Specimen"/>
+  <rdfs:range rdf:resource="#ExperimentalResult"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasQualityCharacteristic">
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="#QualityCharacteristic"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#exhibitsDefect">
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="#Defect"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#meetsRequirement">
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="#ManufacturingRequirement"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#assessesResult">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#QualityAssessment"/>
+  <rdfs:range rdf:resource="#ExperimentalResult"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#againstRequirement">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#QualityAssessment"/>
+  <rdfs:range rdf:resource="#ManufacturingRequirement"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasOutcome">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#QualityAssessment"/>
+  <rdfs:range rdf:resource="#QualityClass"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#exceedsLimitOf">
+  <rdfs:domain rdf:resource="#QualityAssessment"/>
+  <rdfs:range rdf:resource="#QualityCharacteristic"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#evaluatesSetting">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#SettingEvaluation"/>
+  <rdfs:range rdf:resource="#ParameterSetting"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#forRequirement">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#SettingEvaluation"/>
+  <rdfs:range rdf:resource="#ManufacturingRequirement"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#coversAssessment">
+  <rdfs:domain rdf:resource="#SettingEvaluation"/>
+  <rdfs:range rdf:resource="#QualityAssessment"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#recommendsParameterSetting">
+  <rdfs:domain rdf:resource="#ProcessRecommendation"/>
+  <rdfs:range rdf:resource="#ParameterSetting"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#recommendsSettingFor">
+  <rdfs:domain rdf:resource="#ParameterSetting"/>
+  <rdfs:range rdf:resource="#ManufacturingRequirement"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="#parameterSettingID">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParameterSetting"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Identifier of the L9 run.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#layerHeightValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParameterSetting"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Layer height, mm.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#firstLayerSpeedValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParameterSetting"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">First-layer speed set in PrusaSlicer, mm/s. All other speeds were identical in every run.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#infillPercentageValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParameterSetting"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Infill density, %.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#specimenID">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Specimen"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specimen identifier.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#lengthDeviationValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Signed length deviation, measured mean minus 60 mm nominal, mm.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#widthDeviationValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Signed width deviation, measured mean minus 10 mm nominal, mm.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#heightDeviationValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Signed height deviation, measured mean minus 3 mm nominal, mm.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#absLengthDeviationValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">|lengthDeviationValue|, mm (stored so the rules need no arithmetic built-in).</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#absWidthDeviationValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">|widthDeviationValue|, mm.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#absHeightDeviationValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">|heightDeviationValue|, mm.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dimensionalDeviationValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maximum absolute deviation over length, width and height (MaxAbsDev), mm. Derived; not used by the rules.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#surfaceRoughnessRaValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Top-face Ra, um. v1.6: one profile along the 60 mm axis, 2nd-order form removal, Gaussian filter lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm (ISO 21920-3 setting Sc4). See each result comment for the source.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#requiredMaxLengthDeviation">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ManufacturingRequirement"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maximum permitted |length deviation|, mm.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#requiredMaxWidthDeviation">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ManufacturingRequirement"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maximum permitted |width deviation|, mm.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#requiredMaxHeightDeviation">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ManufacturingRequirement"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maximum permitted |height deviation|, mm.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#requiredMaxRaValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ManufacturingRequirement"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Maximum permitted top-face Ra, um.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#intendedUse">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ManufacturingRequirement"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Application profile the requirement stands for.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#estimatedPrintTimeValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParameterSetting"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PrusaSlicer 2.9.6 estimated printing time for one coupon, normal mode, s (from the G-code of the run).</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#estimatedFilamentMassValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ParameterSetting"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PrusaSlicer 2.9.6 estimated filament used for one coupon, g (from the G-code of the run).</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#tensileStrengthValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ExperimentalResult"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Placeholder; not measured in this study, MPa.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#defectSeverityValue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Defect"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Placeholder; no defect inspection performed.</rdfs:comment>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="#AMProcess">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Material">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Machine">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ProcessParameter">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#LayerHeight">
+  <rdfs:subClassOf rdf:resource="#ProcessParameter"/>
+</owl:Class>
+
+<owl:Class rdf:about="#PrintSpeed">
+  <rdfs:subClassOf rdf:resource="#ProcessParameter"/>
+</owl:Class>
+
+<owl:Class rdf:about="#InfillPercentage">
+  <rdfs:subClassOf rdf:resource="#ProcessParameter"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ParameterSetting">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Specimen">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ExperimentalResult">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#QualityCharacteristic">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DimensionalAccuracy">
+  <rdfs:subClassOf rdf:resource="#QualityCharacteristic"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SurfaceQuality">
+  <rdfs:subClassOf rdf:resource="#QualityCharacteristic"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Defect">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Warping">
+  <rdfs:subClassOf rdf:resource="#Defect"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Stringing">
+  <rdfs:subClassOf rdf:resource="#Defect"/>
+</owl:Class>
+
+<owl:Class rdf:about="#LayerDelamination">
+  <rdfs:subClassOf rdf:resource="#Defect"/>
+</owl:Class>
+
+<owl:Class rdf:about="#UnderExtrusion">
+  <rdfs:subClassOf rdf:resource="#Defect"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ManufacturingRequirement">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DimensionOnlyRequirement">
+  <rdfs:subClassOf rdf:resource="#ManufacturingRequirement"/>
+  <rdfs:subClassOf>
+    <owl:Class>
+      <owl:complementOf>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#requiredMaxRaValue"/>
+          <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+        </owl:Restriction>
+      </owl:complementOf>
+    </owl:Class>
+  </rdfs:subClassOf>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A requirement that sets dimensional limits only; it may not carry a top-face Ra limit (asserting one makes the ontology inconsistent). Judged by rule R1b.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#QualityClass">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Acceptable">
+  <rdfs:subClassOf rdf:resource="#QualityClass"/>
+  <owl:disjointWith rdf:resource="#Defective"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Defective">
+  <rdfs:subClassOf rdf:resource="#QualityClass"/>
+</owl:Class>
+
+<owl:Class rdf:about="#QualityAssessment">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SettingEvaluation">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ProcessRecommendation">
+  <rdfs:subClassOf rdf:resource="#SettingEvaluation"/>
+  <owl:disjointWith rdf:resource="#NotRecommendedSetting"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Inferred by rule R8: a two-replicate setting evaluation whose two different covered assessments are both Acceptable. With coversAssessment max 2 these are all of its assessments.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#NotRecommendedSetting">
+  <rdfs:subClassOf rdf:resource="#SettingEvaluation"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Inferred by rule R9: a setting evaluation that covers a Defective assessment.</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#TwoReplicateEvaluation">
+  <rdfs:subClassOf rdf:resource="#SettingEvaluation"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A setting evaluation over exactly two printed replicates (asserted with a coversAssessment max 2 axiom on the individual).</rdfs:comment>
+</owl:Class>
+
+<AMProcess rdf:about="#FDM">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">FDM</rdfs:label>
+</AMProcess>
+
+<Material rdf:about="#PLA">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PLA (Overture, white, 1.75 mm, single batch)</rdfs:label>
+</Material>
+
+<Machine rdf:about="#Printer01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Prusa MK4S, 0.8 mm nozzle</rdfs:label>
+</Machine>
+
+<Acceptable rdf:about="#Acceptable_Instance">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Acceptable</rdfs:label>
+</Acceptable>
+
+<Defective rdf:about="#Defective_Instance">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Defective</rdfs:label>
+</Defective>
+
+<DimensionalAccuracy rdf:about="#DimAccuracy_Instance">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dimensional accuracy (overall)</rdfs:label>
+</DimensionalAccuracy>
+
+<DimensionalAccuracy rdf:about="#LengthAccuracy_Instance">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Length accuracy</rdfs:label>
+</DimensionalAccuracy>
+
+<DimensionalAccuracy rdf:about="#WidthAccuracy_Instance">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Width accuracy</rdfs:label>
+</DimensionalAccuracy>
+
+<DimensionalAccuracy rdf:about="#HeightAccuracy_Instance">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Height accuracy</rdfs:label>
+</DimensionalAccuracy>
+
+<SurfaceQuality rdf:about="#SurfaceQuality_Instance">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Surface quality (top-face Ra)</rdfs:label>
+</SurfaceQuality>
+
+<ParameterSetting rdf:about="#PS01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <usesProcess rdf:resource="#FDM"/>
+  <usesMaterial rdf:resource="#PLA"/>
+  <parameterSettingID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS01</parameterSettingID>
+  <layerHeightValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.1</layerHeightValue>
+  <firstLayerSpeedValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</firstLayerSpeedValue>
+  <infillPercentageValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">20.0</infillPercentageValue>
+  <estimatedPrintTimeValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">525.0</estimatedPrintTimeValue>
+  <estimatedFilamentMassValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.25</estimatedFilamentMassValue>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS01 (0.10 mm / 30 mm/s first layer / 20%)</rdfs:label>
+</ParameterSetting>
+
+<ExperimentalResult rdf:about="#Result01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result01 (S01)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.356</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.197</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.11</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.356</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.197</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.11</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.356</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.933</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S01: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: as reported (Raw_Roughness_Results_Specimens1-9.csv). Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS01"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result01"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S01</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S01</rdfs:label>
+</Specimen>
+
+<ExperimentalResult rdf:about="#Result02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result02 (S02)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.222</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.15</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.128</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.222</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.15</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.128</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.222</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.006</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S02: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen12_top_Profile_20260925120831.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS01"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result02"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S02</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S02</rdfs:label>
+</Specimen>
+
+<ParameterSetting rdf:about="#PS02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <usesProcess rdf:resource="#FDM"/>
+  <usesMaterial rdf:resource="#PLA"/>
+  <parameterSettingID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS02</parameterSettingID>
+  <layerHeightValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.1</layerHeightValue>
+  <firstLayerSpeedValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</firstLayerSpeedValue>
+  <infillPercentageValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">50.0</infillPercentageValue>
+  <estimatedPrintTimeValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">525.0</estimatedPrintTimeValue>
+  <estimatedFilamentMassValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.39</estimatedFilamentMassValue>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS02 (0.10 mm / 60 mm/s first layer / 50%)</rdfs:label>
+</ParameterSetting>
+
+<ExperimentalResult rdf:about="#Result03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result03 (S03)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.582</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.218</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.025</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.582</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.218</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.025</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.582</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">7.751</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S03: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen2_top_Profile_20260930130042.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS02"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result03"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S03</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S03</rdfs:label>
+</Specimen>
+
+<ExperimentalResult rdf:about="#Result04">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result04 (S04)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.594</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.378</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.074</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.594</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.378</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.074</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.594</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">37.124</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S04: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen22_top_Profile_20260930130042.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S04">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS02"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result04"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S04</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S04</rdfs:label>
+</Specimen>
+
+<ParameterSetting rdf:about="#PS03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <usesProcess rdf:resource="#FDM"/>
+  <usesMaterial rdf:resource="#PLA"/>
+  <parameterSettingID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS03</parameterSettingID>
+  <layerHeightValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.1</layerHeightValue>
+  <firstLayerSpeedValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">90.0</firstLayerSpeedValue>
+  <infillPercentageValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">80.0</infillPercentageValue>
+  <estimatedPrintTimeValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">528.0</estimatedPrintTimeValue>
+  <estimatedFilamentMassValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.46</estimatedFilamentMassValue>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS03 (0.10 mm / 90 mm/s first layer / 80%)</rdfs:label>
+</ParameterSetting>
+
+<ExperimentalResult rdf:about="#Result05">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result05 (S05)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.347</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.164</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.008</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.347</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.164</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.008</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.347</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.028</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S05: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen3_top_Profile_20260924093918.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S05">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS03"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result05"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S05</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S05</rdfs:label>
+</Specimen>
+
+<ExperimentalResult rdf:about="#Result06">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result06 (S06)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.427</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.244</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.04</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.427</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.244</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.04</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.427</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.56</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S06: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen32_top_Profile_20260924093918.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S06">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS03"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result06"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S06</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S06</rdfs:label>
+</Specimen>
+
+<ParameterSetting rdf:about="#PS04">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <usesProcess rdf:resource="#FDM"/>
+  <usesMaterial rdf:resource="#PLA"/>
+  <parameterSettingID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS04</parameterSettingID>
+  <layerHeightValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.2</layerHeightValue>
+  <firstLayerSpeedValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</firstLayerSpeedValue>
+  <infillPercentageValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">50.0</infillPercentageValue>
+  <estimatedPrintTimeValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">293.0</estimatedPrintTimeValue>
+  <estimatedFilamentMassValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.33</estimatedFilamentMassValue>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS04 (0.20 mm / 30 mm/s first layer / 50%)</rdfs:label>
+</ParameterSetting>
+
+<ExperimentalResult rdf:about="#Result07">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result07 (S07)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.355</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.206</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.07</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.355</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.206</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.07</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.355</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.243</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S07: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen4_top_Profile_20260924093918.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S07">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS04"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result07"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S07</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S07</rdfs:label>
+</Specimen>
+
+<ExperimentalResult rdf:about="#Result08">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result08 (S08)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.336</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.205</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.005</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.336</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.205</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.005</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.336</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.267</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S08: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen42_top_Profile_20260924093918.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S08">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS04"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result08"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S08</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S08</rdfs:label>
+</Specimen>
+
+<ParameterSetting rdf:about="#PS05">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <usesProcess rdf:resource="#FDM"/>
+  <usesMaterial rdf:resource="#PLA"/>
+  <parameterSettingID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS05</parameterSettingID>
+  <layerHeightValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.2</layerHeightValue>
+  <firstLayerSpeedValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</firstLayerSpeedValue>
+  <infillPercentageValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">80.0</infillPercentageValue>
+  <estimatedPrintTimeValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">293.0</estimatedPrintTimeValue>
+  <estimatedFilamentMassValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.41</estimatedFilamentMassValue>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS05 (0.20 mm / 60 mm/s first layer / 80%)</rdfs:label>
+</ParameterSetting>
+
+<ExperimentalResult rdf:about="#Result09">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result09 (S09)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.405</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.278</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.058</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.405</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.278</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.058</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.405</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.913</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S09: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen5_top_Profile_20260924093918.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S09">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS05"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result09"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S09</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S09</rdfs:label>
+</Specimen>
+
+<ExperimentalResult rdf:about="#Result10">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result10 (S10)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.726</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.576</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.047</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.726</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.576</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.047</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.726</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">105.08</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S10: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen52_top_Profile_20260924093918.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S10">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS05"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result10"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S10</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S10</rdfs:label>
+</Specimen>
+
+<ParameterSetting rdf:about="#PS06">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <usesProcess rdf:resource="#FDM"/>
+  <usesMaterial rdf:resource="#PLA"/>
+  <parameterSettingID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS06</parameterSettingID>
+  <layerHeightValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.2</layerHeightValue>
+  <firstLayerSpeedValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">90.0</firstLayerSpeedValue>
+  <infillPercentageValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">20.0</infillPercentageValue>
+  <estimatedPrintTimeValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">288.0</estimatedPrintTimeValue>
+  <estimatedFilamentMassValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.21</estimatedFilamentMassValue>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS06 (0.20 mm / 90 mm/s first layer / 20%)</rdfs:label>
+</ParameterSetting>
+
+<ExperimentalResult rdf:about="#Result11">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result11 (S11)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.221</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.085</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.009</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.221</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.085</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.009</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.221</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.89</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S11: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen6_top_Profile_20260925120831.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S11">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS06"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result11"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S11</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S11</rdfs:label>
+</Specimen>
+
+<ExperimentalResult rdf:about="#Result12">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result12 (S12)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.24</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.168</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.064</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.24</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.168</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.064</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.24</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.119</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S12: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen62_top_Profile_20260925120831.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S12">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS06"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result12"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S12</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S12</rdfs:label>
+</Specimen>
+
+<ParameterSetting rdf:about="#PS07">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <usesProcess rdf:resource="#FDM"/>
+  <usesMaterial rdf:resource="#PLA"/>
+  <parameterSettingID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS07</parameterSettingID>
+  <layerHeightValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3</layerHeightValue>
+  <firstLayerSpeedValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30.0</firstLayerSpeedValue>
+  <infillPercentageValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">80.0</infillPercentageValue>
+  <estimatedPrintTimeValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">212.0</estimatedPrintTimeValue>
+  <estimatedFilamentMassValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.31</estimatedFilamentMassValue>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS07 (0.30 mm / 30 mm/s first layer / 80%)</rdfs:label>
+</ParameterSetting>
+
+<ExperimentalResult rdf:about="#Result13">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result13 (S13)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.343</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.201</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.002</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.343</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.201</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.002</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.343</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.901</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S13: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen7_top_Profile_20260925120831.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S13">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS07"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result13"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S13</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S13</rdfs:label>
+</Specimen>
+
+<ExperimentalResult rdf:about="#Result14">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result14 (S14)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.212</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.087</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.002</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.212</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.087</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.002</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.212</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.336</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S14: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen72_top_Profile_20260925120831.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S14">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS07"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result14"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S14</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S14</rdfs:label>
+</Specimen>
+
+<ParameterSetting rdf:about="#PS08">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <usesProcess rdf:resource="#FDM"/>
+  <usesMaterial rdf:resource="#PLA"/>
+  <parameterSettingID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS08</parameterSettingID>
+  <layerHeightValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3</layerHeightValue>
+  <firstLayerSpeedValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60.0</firstLayerSpeedValue>
+  <infillPercentageValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">20.0</infillPercentageValue>
+  <estimatedPrintTimeValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">207.0</estimatedPrintTimeValue>
+  <estimatedFilamentMassValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.12</estimatedFilamentMassValue>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS08 (0.30 mm / 60 mm/s first layer / 20%)</rdfs:label>
+</ParameterSetting>
+
+<ExperimentalResult rdf:about="#Result15">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result15 (S15)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.464</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.251</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.042</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.464</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.251</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.042</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.464</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">101.354</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S15: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen8_top_Profile_20260925120831.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S15">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS08"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result15"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S15</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S15</rdfs:label>
+</Specimen>
+
+<ExperimentalResult rdf:about="#Result16">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result16 (S16)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.537</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.386</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.084</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.537</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.386</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.084</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.537</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">76.671</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S16: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen82_top_Profile_20260925120831.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S16">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS08"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result16"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S16</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S16</rdfs:label>
+</Specimen>
+
+<ParameterSetting rdf:about="#PS09">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <usesProcess rdf:resource="#FDM"/>
+  <usesMaterial rdf:resource="#PLA"/>
+  <parameterSettingID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS09</parameterSettingID>
+  <layerHeightValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3</layerHeightValue>
+  <firstLayerSpeedValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">90.0</firstLayerSpeedValue>
+  <infillPercentageValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">50.0</infillPercentageValue>
+  <estimatedPrintTimeValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">208.0</estimatedPrintTimeValue>
+  <estimatedFilamentMassValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.21</estimatedFilamentMassValue>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">PS09 (0.30 mm / 90 mm/s first layer / 50%)</rdfs:label>
+</ParameterSetting>
+
+<ExperimentalResult rdf:about="#Result17">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result17 (S17)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.533</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.351</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.047</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.533</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.351</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.047</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.533</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">73.809</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S17: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen9_top_Profile_20260925120831.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S17">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS09"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result17"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S17</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S17</rdfs:label>
+</Specimen>
+
+<ExperimentalResult rdf:about="#Result18">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasQualityCharacteristic rdf:resource="#SurfaceQuality_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#LengthAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#HeightAccuracy_Instance"/>
+  <hasQualityCharacteristic rdf:resource="#WidthAccuracy_Instance"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Result18 (S18)</rdfs:label>
+  <lengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.425</lengthDeviationValue>
+  <widthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.28</widthDeviationValue>
+  <heightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">-0.006</heightDeviationValue>
+  <absLengthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.425</absLengthDeviationValue>
+  <absWidthDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.28</absWidthDeviationValue>
+  <absHeightDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.006</absHeightDeviationValue>
+  <dimensionalDeviationValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.425</dimensionalDeviationValue>
+  <surfaceRoughnessRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">66.87</surfaceRoughnessRaValue>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Measured data for S18: dimensions from FDM_Experimental_Dataset_Dimensional_Accuracy.xlsx (Keyence VR-6000, mean of three two-point readings); top-face Ra: ISO 21920-3 setting Sc4: Gaussian lc 2.5 mm, evaluation length 12.5 mm centred on 30 mm, 2nd-order form removal; recomputed from Specimen92_top_Profile_20260925120831.csv. Outcomes are inferred by the reasoner and are not stated here.</rdfs:comment>
+</ExperimentalResult>
+
+<Specimen rdf:about="#S18">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <hasParameterSetting rdf:resource="#PS09"/>
+  <printedOnMachine rdf:resource="#Printer01"/>
+  <hasResult rdf:resource="#Result18"/>
+  <specimenID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S18</specimenID>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">S18</rdfs:label>
+</Specimen>
+
+<swrl:Imp rdf:about="#R1_Acceptable">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#QualityAssessment"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#assessesResult"/>
+              <swrl:argument1 rdf:resource="urn:swrl#a"/>
+              <swrl:argument2 rdf:resource="urn:swrl#r"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#againstRequirement"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                  <swrl:argument2 rdf:resource="urn:swrl#q"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest>
+                <rdf:Description>
+                  <rdf:first>
+                    <swrl:DatavaluedPropertyAtom>
+                      <swrl:propertyPredicate rdf:resource="#requiredMaxLengthDeviation"/>
+                      <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                      <swrl:argument2 rdf:resource="urn:swrl#ml"/>
+                    </swrl:DatavaluedPropertyAtom>
+                  </rdf:first>
+                  <rdf:rest>
+                    <rdf:Description>
+                      <rdf:first>
+                        <swrl:DatavaluedPropertyAtom>
+                          <swrl:propertyPredicate rdf:resource="#requiredMaxWidthDeviation"/>
+                          <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                          <swrl:argument2 rdf:resource="urn:swrl#mw"/>
+                        </swrl:DatavaluedPropertyAtom>
+                      </rdf:first>
+                      <rdf:rest>
+                        <rdf:Description>
+                          <rdf:first>
+                            <swrl:DatavaluedPropertyAtom>
+                              <swrl:propertyPredicate rdf:resource="#requiredMaxHeightDeviation"/>
+                              <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                              <swrl:argument2 rdf:resource="urn:swrl#mh"/>
+                            </swrl:DatavaluedPropertyAtom>
+                          </rdf:first>
+                          <rdf:rest>
+                            <rdf:Description>
+                              <rdf:first>
+                                <swrl:DatavaluedPropertyAtom>
+                                  <swrl:propertyPredicate rdf:resource="#requiredMaxRaValue"/>
+                                  <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                                  <swrl:argument2 rdf:resource="urn:swrl#mr"/>
+                                </swrl:DatavaluedPropertyAtom>
+                              </rdf:first>
+                              <rdf:rest>
+                                <rdf:Description>
+                                  <rdf:first>
+                                    <swrl:DatavaluedPropertyAtom>
+                                      <swrl:propertyPredicate rdf:resource="#absLengthDeviationValue"/>
+                                      <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                                      <swrl:argument2 rdf:resource="urn:swrl#al"/>
+                                    </swrl:DatavaluedPropertyAtom>
+                                  </rdf:first>
+                                  <rdf:rest>
+                                    <rdf:Description>
+                                      <rdf:first>
+                                        <swrl:DatavaluedPropertyAtom>
+                                          <swrl:propertyPredicate rdf:resource="#absWidthDeviationValue"/>
+                                          <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                                          <swrl:argument2 rdf:resource="urn:swrl#aw"/>
+                                        </swrl:DatavaluedPropertyAtom>
+                                      </rdf:first>
+                                      <rdf:rest>
+                                        <rdf:Description>
+                                          <rdf:first>
+                                            <swrl:DatavaluedPropertyAtom>
+                                              <swrl:propertyPredicate rdf:resource="#absHeightDeviationValue"/>
+                                              <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                                              <swrl:argument2 rdf:resource="urn:swrl#ah"/>
+                                            </swrl:DatavaluedPropertyAtom>
+                                          </rdf:first>
+                                          <rdf:rest>
+                                            <rdf:Description>
+                                              <rdf:first>
+                                                <swrl:DatavaluedPropertyAtom>
+                                                  <swrl:propertyPredicate rdf:resource="#surfaceRoughnessRaValue"/>
+                                                  <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                                                  <swrl:argument2 rdf:resource="urn:swrl#s"/>
+                                                </swrl:DatavaluedPropertyAtom>
+                                              </rdf:first>
+                                              <rdf:rest>
+                                                <rdf:Description>
+                                                  <rdf:first>
+                                                    <swrl:BuiltinAtom>
+                                                      <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#lessThanOrEqual"/>
+                                                      <swrl:arguments>
+                                                        <rdf:Description>
+                                                          <rdf:first rdf:resource="urn:swrl#al"/>
+                                                          <rdf:rest>
+                                                            <rdf:Description>
+                                                              <rdf:first rdf:resource="urn:swrl#ml"/>
+                                                              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                            </rdf:Description>
+                                                          </rdf:rest>
+                                                        </rdf:Description>
+                                                      </swrl:arguments>
+                                                    </swrl:BuiltinAtom>
+                                                  </rdf:first>
+                                                  <rdf:rest>
+                                                    <rdf:Description>
+                                                      <rdf:first>
+                                                        <swrl:BuiltinAtom>
+                                                          <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#lessThanOrEqual"/>
+                                                          <swrl:arguments>
+                                                            <rdf:Description>
+                                                              <rdf:first rdf:resource="urn:swrl#aw"/>
+                                                              <rdf:rest>
+                                                                <rdf:Description>
+                                                                  <rdf:first rdf:resource="urn:swrl#mw"/>
+                                                                  <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                                </rdf:Description>
+                                                              </rdf:rest>
+                                                            </rdf:Description>
+                                                          </swrl:arguments>
+                                                        </swrl:BuiltinAtom>
+                                                      </rdf:first>
+                                                      <rdf:rest>
+                                                        <rdf:Description>
+                                                          <rdf:first>
+                                                            <swrl:BuiltinAtom>
+                                                              <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#lessThanOrEqual"/>
+                                                              <swrl:arguments>
+                                                                <rdf:Description>
+                                                                  <rdf:first rdf:resource="urn:swrl#ah"/>
+                                                                  <rdf:rest>
+                                                                    <rdf:Description>
+                                                                      <rdf:first rdf:resource="urn:swrl#mh"/>
+                                                                      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                                    </rdf:Description>
+                                                                  </rdf:rest>
+                                                                </rdf:Description>
+                                                              </swrl:arguments>
+                                                            </swrl:BuiltinAtom>
+                                                          </rdf:first>
+                                                          <rdf:rest>
+                                                            <rdf:Description>
+                                                              <rdf:first>
+                                                                <swrl:BuiltinAtom>
+                                                                  <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#lessThanOrEqual"/>
+                                                                  <swrl:arguments>
+                                                                    <rdf:Description>
+                                                                      <rdf:first rdf:resource="urn:swrl#s"/>
+                                                                      <rdf:rest>
+                                                                        <rdf:Description>
+                                                                          <rdf:first rdf:resource="urn:swrl#mr"/>
+                                                                          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                                        </rdf:Description>
+                                                                      </rdf:rest>
+                                                                    </rdf:Description>
+                                                                  </swrl:arguments>
+                                                                </swrl:BuiltinAtom>
+                                                              </rdf:first>
+                                                              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                            </rdf:Description>
+                                                          </rdf:rest>
+                                                        </rdf:Description>
+                                                      </rdf:rest>
+                                                    </rdf:Description>
+                                                  </rdf:rest>
+                                                </rdf:Description>
+                                              </rdf:rest>
+                                            </rdf:Description>
+                                          </rdf:rest>
+                                        </rdf:Description>
+                                      </rdf:rest>
+                                    </rdf:Description>
+                                  </rdf:rest>
+                                </rdf:Description>
+                              </rdf:rest>
+                            </rdf:Description>
+                          </rdf:rest>
+                        </rdf:Description>
+                      </rdf:rest>
+                    </rdf:Description>
+                  </rdf:rest>
+                </rdf:Description>
+              </rdf:rest>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:IndividualPropertyAtom>
+          <swrl:propertyPredicate rdf:resource="#hasOutcome"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+          <swrl:argument2 rdf:resource="#Acceptable_Instance"/>
+        </swrl:IndividualPropertyAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R1_Acceptable</rdfs:label>
+</swrl:Imp>
+
+<swrl:Variable rdf:about="urn:swrl#a"/>
+
+<swrl:Variable rdf:about="urn:swrl#r"/>
+
+<swrl:Variable rdf:about="urn:swrl#q"/>
+
+<swrl:Variable rdf:about="urn:swrl#ml"/>
+
+<swrl:Variable rdf:about="urn:swrl#mw"/>
+
+<swrl:Variable rdf:about="urn:swrl#mh"/>
+
+<swrl:Variable rdf:about="urn:swrl#mr"/>
+
+<swrl:Variable rdf:about="urn:swrl#al"/>
+
+<swrl:Variable rdf:about="urn:swrl#aw"/>
+
+<swrl:Variable rdf:about="urn:swrl#ah"/>
+
+<swrl:Variable rdf:about="urn:swrl#s"/>
+
+<swrl:Imp rdf:about="#R1b_AcceptableDimensionOnly">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#DimensionOnlyRequirement"/>
+          <swrl:argument1 rdf:resource="urn:swrl#q"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:ClassAtom>
+              <swrl:classPredicate rdf:resource="#QualityAssessment"/>
+              <swrl:argument1 rdf:resource="urn:swrl#a"/>
+            </swrl:ClassAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#assessesResult"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                  <swrl:argument2 rdf:resource="urn:swrl#r"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest>
+                <rdf:Description>
+                  <rdf:first>
+                    <swrl:IndividualPropertyAtom>
+                      <swrl:propertyPredicate rdf:resource="#againstRequirement"/>
+                      <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                      <swrl:argument2 rdf:resource="urn:swrl#q"/>
+                    </swrl:IndividualPropertyAtom>
+                  </rdf:first>
+                  <rdf:rest>
+                    <rdf:Description>
+                      <rdf:first>
+                        <swrl:DatavaluedPropertyAtom>
+                          <swrl:propertyPredicate rdf:resource="#requiredMaxLengthDeviation"/>
+                          <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                          <swrl:argument2 rdf:resource="urn:swrl#ml"/>
+                        </swrl:DatavaluedPropertyAtom>
+                      </rdf:first>
+                      <rdf:rest>
+                        <rdf:Description>
+                          <rdf:first>
+                            <swrl:DatavaluedPropertyAtom>
+                              <swrl:propertyPredicate rdf:resource="#requiredMaxWidthDeviation"/>
+                              <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                              <swrl:argument2 rdf:resource="urn:swrl#mw"/>
+                            </swrl:DatavaluedPropertyAtom>
+                          </rdf:first>
+                          <rdf:rest>
+                            <rdf:Description>
+                              <rdf:first>
+                                <swrl:DatavaluedPropertyAtom>
+                                  <swrl:propertyPredicate rdf:resource="#requiredMaxHeightDeviation"/>
+                                  <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                                  <swrl:argument2 rdf:resource="urn:swrl#mh"/>
+                                </swrl:DatavaluedPropertyAtom>
+                              </rdf:first>
+                              <rdf:rest>
+                                <rdf:Description>
+                                  <rdf:first>
+                                    <swrl:DatavaluedPropertyAtom>
+                                      <swrl:propertyPredicate rdf:resource="#absLengthDeviationValue"/>
+                                      <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                                      <swrl:argument2 rdf:resource="urn:swrl#al"/>
+                                    </swrl:DatavaluedPropertyAtom>
+                                  </rdf:first>
+                                  <rdf:rest>
+                                    <rdf:Description>
+                                      <rdf:first>
+                                        <swrl:DatavaluedPropertyAtom>
+                                          <swrl:propertyPredicate rdf:resource="#absWidthDeviationValue"/>
+                                          <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                                          <swrl:argument2 rdf:resource="urn:swrl#aw"/>
+                                        </swrl:DatavaluedPropertyAtom>
+                                      </rdf:first>
+                                      <rdf:rest>
+                                        <rdf:Description>
+                                          <rdf:first>
+                                            <swrl:DatavaluedPropertyAtom>
+                                              <swrl:propertyPredicate rdf:resource="#absHeightDeviationValue"/>
+                                              <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                                              <swrl:argument2 rdf:resource="urn:swrl#ah"/>
+                                            </swrl:DatavaluedPropertyAtom>
+                                          </rdf:first>
+                                          <rdf:rest>
+                                            <rdf:Description>
+                                              <rdf:first>
+                                                <swrl:BuiltinAtom>
+                                                  <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#lessThanOrEqual"/>
+                                                  <swrl:arguments>
+                                                    <rdf:Description>
+                                                      <rdf:first rdf:resource="urn:swrl#al"/>
+                                                      <rdf:rest>
+                                                        <rdf:Description>
+                                                          <rdf:first rdf:resource="urn:swrl#ml"/>
+                                                          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                        </rdf:Description>
+                                                      </rdf:rest>
+                                                    </rdf:Description>
+                                                  </swrl:arguments>
+                                                </swrl:BuiltinAtom>
+                                              </rdf:first>
+                                              <rdf:rest>
+                                                <rdf:Description>
+                                                  <rdf:first>
+                                                    <swrl:BuiltinAtom>
+                                                      <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#lessThanOrEqual"/>
+                                                      <swrl:arguments>
+                                                        <rdf:Description>
+                                                          <rdf:first rdf:resource="urn:swrl#aw"/>
+                                                          <rdf:rest>
+                                                            <rdf:Description>
+                                                              <rdf:first rdf:resource="urn:swrl#mw"/>
+                                                              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                            </rdf:Description>
+                                                          </rdf:rest>
+                                                        </rdf:Description>
+                                                      </swrl:arguments>
+                                                    </swrl:BuiltinAtom>
+                                                  </rdf:first>
+                                                  <rdf:rest>
+                                                    <rdf:Description>
+                                                      <rdf:first>
+                                                        <swrl:BuiltinAtom>
+                                                          <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#lessThanOrEqual"/>
+                                                          <swrl:arguments>
+                                                            <rdf:Description>
+                                                              <rdf:first rdf:resource="urn:swrl#ah"/>
+                                                              <rdf:rest>
+                                                                <rdf:Description>
+                                                                  <rdf:first rdf:resource="urn:swrl#mh"/>
+                                                                  <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                                </rdf:Description>
+                                                              </rdf:rest>
+                                                            </rdf:Description>
+                                                          </swrl:arguments>
+                                                        </swrl:BuiltinAtom>
+                                                      </rdf:first>
+                                                      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                    </rdf:Description>
+                                                  </rdf:rest>
+                                                </rdf:Description>
+                                              </rdf:rest>
+                                            </rdf:Description>
+                                          </rdf:rest>
+                                        </rdf:Description>
+                                      </rdf:rest>
+                                    </rdf:Description>
+                                  </rdf:rest>
+                                </rdf:Description>
+                              </rdf:rest>
+                            </rdf:Description>
+                          </rdf:rest>
+                        </rdf:Description>
+                      </rdf:rest>
+                    </rdf:Description>
+                  </rdf:rest>
+                </rdf:Description>
+              </rdf:rest>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:IndividualPropertyAtom>
+          <swrl:propertyPredicate rdf:resource="#hasOutcome"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+          <swrl:argument2 rdf:resource="#Acceptable_Instance"/>
+        </swrl:IndividualPropertyAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R1b_AcceptableDimensionOnly</rdfs:label>
+</swrl:Imp>
+
+<swrl:Imp rdf:about="#R2_LengthExceeded">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#QualityAssessment"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#assessesResult"/>
+              <swrl:argument1 rdf:resource="urn:swrl#a"/>
+              <swrl:argument2 rdf:resource="urn:swrl#r"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#againstRequirement"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                  <swrl:argument2 rdf:resource="urn:swrl#q"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest>
+                <rdf:Description>
+                  <rdf:first>
+                    <swrl:DatavaluedPropertyAtom>
+                      <swrl:propertyPredicate rdf:resource="#requiredMaxLengthDeviation"/>
+                      <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                      <swrl:argument2 rdf:resource="urn:swrl#ml"/>
+                    </swrl:DatavaluedPropertyAtom>
+                  </rdf:first>
+                  <rdf:rest>
+                    <rdf:Description>
+                      <rdf:first>
+                        <swrl:DatavaluedPropertyAtom>
+                          <swrl:propertyPredicate rdf:resource="#absLengthDeviationValue"/>
+                          <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                          <swrl:argument2 rdf:resource="urn:swrl#al"/>
+                        </swrl:DatavaluedPropertyAtom>
+                      </rdf:first>
+                      <rdf:rest>
+                        <rdf:Description>
+                          <rdf:first>
+                            <swrl:BuiltinAtom>
+                              <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#greaterThan"/>
+                              <swrl:arguments>
+                                <rdf:Description>
+                                  <rdf:first rdf:resource="urn:swrl#al"/>
+                                  <rdf:rest>
+                                    <rdf:Description>
+                                      <rdf:first rdf:resource="urn:swrl#ml"/>
+                                      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    </rdf:Description>
+                                  </rdf:rest>
+                                </rdf:Description>
+                              </swrl:arguments>
+                            </swrl:BuiltinAtom>
+                          </rdf:first>
+                          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        </rdf:Description>
+                      </rdf:rest>
+                    </rdf:Description>
+                  </rdf:rest>
+                </rdf:Description>
+              </rdf:rest>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:IndividualPropertyAtom>
+          <swrl:propertyPredicate rdf:resource="#exceedsLimitOf"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+          <swrl:argument2 rdf:resource="#LengthAccuracy_Instance"/>
+        </swrl:IndividualPropertyAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R2_LengthExceeded</rdfs:label>
+</swrl:Imp>
+
+<swrl:Imp rdf:about="#R3_WidthExceeded">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#QualityAssessment"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#assessesResult"/>
+              <swrl:argument1 rdf:resource="urn:swrl#a"/>
+              <swrl:argument2 rdf:resource="urn:swrl#r"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#againstRequirement"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                  <swrl:argument2 rdf:resource="urn:swrl#q"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest>
+                <rdf:Description>
+                  <rdf:first>
+                    <swrl:DatavaluedPropertyAtom>
+                      <swrl:propertyPredicate rdf:resource="#requiredMaxWidthDeviation"/>
+                      <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                      <swrl:argument2 rdf:resource="urn:swrl#mw"/>
+                    </swrl:DatavaluedPropertyAtom>
+                  </rdf:first>
+                  <rdf:rest>
+                    <rdf:Description>
+                      <rdf:first>
+                        <swrl:DatavaluedPropertyAtom>
+                          <swrl:propertyPredicate rdf:resource="#absWidthDeviationValue"/>
+                          <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                          <swrl:argument2 rdf:resource="urn:swrl#aw"/>
+                        </swrl:DatavaluedPropertyAtom>
+                      </rdf:first>
+                      <rdf:rest>
+                        <rdf:Description>
+                          <rdf:first>
+                            <swrl:BuiltinAtom>
+                              <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#greaterThan"/>
+                              <swrl:arguments>
+                                <rdf:Description>
+                                  <rdf:first rdf:resource="urn:swrl#aw"/>
+                                  <rdf:rest>
+                                    <rdf:Description>
+                                      <rdf:first rdf:resource="urn:swrl#mw"/>
+                                      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    </rdf:Description>
+                                  </rdf:rest>
+                                </rdf:Description>
+                              </swrl:arguments>
+                            </swrl:BuiltinAtom>
+                          </rdf:first>
+                          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        </rdf:Description>
+                      </rdf:rest>
+                    </rdf:Description>
+                  </rdf:rest>
+                </rdf:Description>
+              </rdf:rest>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:IndividualPropertyAtom>
+          <swrl:propertyPredicate rdf:resource="#exceedsLimitOf"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+          <swrl:argument2 rdf:resource="#WidthAccuracy_Instance"/>
+        </swrl:IndividualPropertyAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R3_WidthExceeded</rdfs:label>
+</swrl:Imp>
+
+<swrl:Imp rdf:about="#R4_HeightExceeded">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#QualityAssessment"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#assessesResult"/>
+              <swrl:argument1 rdf:resource="urn:swrl#a"/>
+              <swrl:argument2 rdf:resource="urn:swrl#r"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#againstRequirement"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                  <swrl:argument2 rdf:resource="urn:swrl#q"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest>
+                <rdf:Description>
+                  <rdf:first>
+                    <swrl:DatavaluedPropertyAtom>
+                      <swrl:propertyPredicate rdf:resource="#requiredMaxHeightDeviation"/>
+                      <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                      <swrl:argument2 rdf:resource="urn:swrl#mh"/>
+                    </swrl:DatavaluedPropertyAtom>
+                  </rdf:first>
+                  <rdf:rest>
+                    <rdf:Description>
+                      <rdf:first>
+                        <swrl:DatavaluedPropertyAtom>
+                          <swrl:propertyPredicate rdf:resource="#absHeightDeviationValue"/>
+                          <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                          <swrl:argument2 rdf:resource="urn:swrl#ah"/>
+                        </swrl:DatavaluedPropertyAtom>
+                      </rdf:first>
+                      <rdf:rest>
+                        <rdf:Description>
+                          <rdf:first>
+                            <swrl:BuiltinAtom>
+                              <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#greaterThan"/>
+                              <swrl:arguments>
+                                <rdf:Description>
+                                  <rdf:first rdf:resource="urn:swrl#ah"/>
+                                  <rdf:rest>
+                                    <rdf:Description>
+                                      <rdf:first rdf:resource="urn:swrl#mh"/>
+                                      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    </rdf:Description>
+                                  </rdf:rest>
+                                </rdf:Description>
+                              </swrl:arguments>
+                            </swrl:BuiltinAtom>
+                          </rdf:first>
+                          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        </rdf:Description>
+                      </rdf:rest>
+                    </rdf:Description>
+                  </rdf:rest>
+                </rdf:Description>
+              </rdf:rest>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:IndividualPropertyAtom>
+          <swrl:propertyPredicate rdf:resource="#exceedsLimitOf"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+          <swrl:argument2 rdf:resource="#HeightAccuracy_Instance"/>
+        </swrl:IndividualPropertyAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R4_HeightExceeded</rdfs:label>
+</swrl:Imp>
+
+<swrl:Imp rdf:about="#R5_RaExceeded">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#QualityAssessment"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#assessesResult"/>
+              <swrl:argument1 rdf:resource="urn:swrl#a"/>
+              <swrl:argument2 rdf:resource="urn:swrl#r"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#againstRequirement"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                  <swrl:argument2 rdf:resource="urn:swrl#q"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest>
+                <rdf:Description>
+                  <rdf:first>
+                    <swrl:DatavaluedPropertyAtom>
+                      <swrl:propertyPredicate rdf:resource="#requiredMaxRaValue"/>
+                      <swrl:argument1 rdf:resource="urn:swrl#q"/>
+                      <swrl:argument2 rdf:resource="urn:swrl#mr"/>
+                    </swrl:DatavaluedPropertyAtom>
+                  </rdf:first>
+                  <rdf:rest>
+                    <rdf:Description>
+                      <rdf:first>
+                        <swrl:DatavaluedPropertyAtom>
+                          <swrl:propertyPredicate rdf:resource="#surfaceRoughnessRaValue"/>
+                          <swrl:argument1 rdf:resource="urn:swrl#r"/>
+                          <swrl:argument2 rdf:resource="urn:swrl#s"/>
+                        </swrl:DatavaluedPropertyAtom>
+                      </rdf:first>
+                      <rdf:rest>
+                        <rdf:Description>
+                          <rdf:first>
+                            <swrl:BuiltinAtom>
+                              <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#greaterThan"/>
+                              <swrl:arguments>
+                                <rdf:Description>
+                                  <rdf:first rdf:resource="urn:swrl#s"/>
+                                  <rdf:rest>
+                                    <rdf:Description>
+                                      <rdf:first rdf:resource="urn:swrl#mr"/>
+                                      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    </rdf:Description>
+                                  </rdf:rest>
+                                </rdf:Description>
+                              </swrl:arguments>
+                            </swrl:BuiltinAtom>
+                          </rdf:first>
+                          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        </rdf:Description>
+                      </rdf:rest>
+                    </rdf:Description>
+                  </rdf:rest>
+                </rdf:Description>
+              </rdf:rest>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:IndividualPropertyAtom>
+          <swrl:propertyPredicate rdf:resource="#exceedsLimitOf"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+          <swrl:argument2 rdf:resource="#SurfaceQuality_Instance"/>
+        </swrl:IndividualPropertyAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R5_RaExceeded</rdfs:label>
+</swrl:Imp>
+
+<swrl:Imp rdf:about="#R5b_Defective">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#QualityAssessment"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#exceedsLimitOf"/>
+              <swrl:argument1 rdf:resource="urn:swrl#a"/>
+              <swrl:argument2 rdf:resource="urn:swrl#c"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:IndividualPropertyAtom>
+          <swrl:propertyPredicate rdf:resource="#hasOutcome"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+          <swrl:argument2 rdf:resource="#Defective_Instance"/>
+        </swrl:IndividualPropertyAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R5b_Defective</rdfs:label>
+</swrl:Imp>
+
+<swrl:Variable rdf:about="urn:swrl#c"/>
+
+<swrl:Imp rdf:about="#R6_MeetsRequirement">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#QualityAssessment"/>
+          <swrl:argument1 rdf:resource="urn:swrl#a"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#hasOutcome"/>
+              <swrl:argument1 rdf:resource="urn:swrl#a"/>
+              <swrl:argument2 rdf:resource="#Acceptable_Instance"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#assessesResult"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                  <swrl:argument2 rdf:resource="urn:swrl#r"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest>
+                <rdf:Description>
+                  <rdf:first>
+                    <swrl:IndividualPropertyAtom>
+                      <swrl:propertyPredicate rdf:resource="#againstRequirement"/>
+                      <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                      <swrl:argument2 rdf:resource="urn:swrl#q"/>
+                    </swrl:IndividualPropertyAtom>
+                  </rdf:first>
+                  <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                </rdf:Description>
+              </rdf:rest>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:IndividualPropertyAtom>
+          <swrl:propertyPredicate rdf:resource="#meetsRequirement"/>
+          <swrl:argument1 rdf:resource="urn:swrl#r"/>
+          <swrl:argument2 rdf:resource="urn:swrl#q"/>
+        </swrl:IndividualPropertyAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R6_MeetsRequirement</rdfs:label>
+</swrl:Imp>
+
+<swrl:Imp rdf:about="#R8_RecommendAllReplicates">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#TwoReplicateEvaluation"/>
+          <swrl:argument1 rdf:resource="urn:swrl#e"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#coversAssessment"/>
+              <swrl:argument1 rdf:resource="urn:swrl#e"/>
+              <swrl:argument2 rdf:resource="urn:swrl#a1"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#coversAssessment"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#e"/>
+                  <swrl:argument2 rdf:resource="urn:swrl#a2"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest>
+                <rdf:Description>
+                  <rdf:first>
+                    <swrl:DifferentIndividualsAtom>
+                      <swrl:argument1 rdf:resource="urn:swrl#a1"/>
+                      <swrl:argument2 rdf:resource="urn:swrl#a2"/>
+                    </swrl:DifferentIndividualsAtom>
+                  </rdf:first>
+                  <rdf:rest>
+                    <rdf:Description>
+                      <rdf:first>
+                        <swrl:IndividualPropertyAtom>
+                          <swrl:propertyPredicate rdf:resource="#hasOutcome"/>
+                          <swrl:argument1 rdf:resource="urn:swrl#a1"/>
+                          <swrl:argument2 rdf:resource="#Acceptable_Instance"/>
+                        </swrl:IndividualPropertyAtom>
+                      </rdf:first>
+                      <rdf:rest>
+                        <rdf:Description>
+                          <rdf:first>
+                            <swrl:IndividualPropertyAtom>
+                              <swrl:propertyPredicate rdf:resource="#hasOutcome"/>
+                              <swrl:argument1 rdf:resource="urn:swrl#a2"/>
+                              <swrl:argument2 rdf:resource="#Acceptable_Instance"/>
+                            </swrl:IndividualPropertyAtom>
+                          </rdf:first>
+                          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                        </rdf:Description>
+                      </rdf:rest>
+                    </rdf:Description>
+                  </rdf:rest>
+                </rdf:Description>
+              </rdf:rest>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#ProcessRecommendation"/>
+          <swrl:argument1 rdf:resource="urn:swrl#e"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R8_RecommendAllReplicates</rdfs:label>
+</swrl:Imp>
+
+<swrl:Variable rdf:about="urn:swrl#e"/>
+
+<swrl:Variable rdf:about="urn:swrl#a1"/>
+
+<swrl:Variable rdf:about="urn:swrl#a2"/>
+
+<swrl:Imp rdf:about="#R9_NotRecommended">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#SettingEvaluation"/>
+          <swrl:argument1 rdf:resource="urn:swrl#e"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#coversAssessment"/>
+              <swrl:argument1 rdf:resource="urn:swrl#e"/>
+              <swrl:argument2 rdf:resource="urn:swrl#a"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#hasOutcome"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#a"/>
+                  <swrl:argument2 rdf:resource="#Defective_Instance"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#NotRecommendedSetting"/>
+          <swrl:argument1 rdf:resource="urn:swrl#e"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R9_NotRecommended</rdfs:label>
+</swrl:Imp>
+
+<swrl:Imp rdf:about="#R7_Recommend">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <swrl:body>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:ClassAtom>
+          <swrl:classPredicate rdf:resource="#ProcessRecommendation"/>
+          <swrl:argument1 rdf:resource="urn:swrl#e"/>
+        </swrl:ClassAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#evaluatesSetting"/>
+              <swrl:argument1 rdf:resource="urn:swrl#e"/>
+              <swrl:argument2 rdf:resource="urn:swrl#p"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest>
+            <rdf:Description>
+              <rdf:first>
+                <swrl:IndividualPropertyAtom>
+                  <swrl:propertyPredicate rdf:resource="#forRequirement"/>
+                  <swrl:argument1 rdf:resource="urn:swrl#e"/>
+                  <swrl:argument2 rdf:resource="urn:swrl#q"/>
+                </swrl:IndividualPropertyAtom>
+              </rdf:first>
+              <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+          </rdf:rest>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:body>
+  <swrl:head>
+    <rdf:Description>
+      <rdf:first>
+        <swrl:IndividualPropertyAtom>
+          <swrl:propertyPredicate rdf:resource="#recommendsSettingFor"/>
+          <swrl:argument1 rdf:resource="urn:swrl#p"/>
+          <swrl:argument2 rdf:resource="urn:swrl#q"/>
+        </swrl:IndividualPropertyAtom>
+      </rdf:first>
+      <rdf:rest>
+        <rdf:Description>
+          <rdf:first>
+            <swrl:IndividualPropertyAtom>
+              <swrl:propertyPredicate rdf:resource="#recommendsParameterSetting"/>
+              <swrl:argument1 rdf:resource="urn:swrl#e"/>
+              <swrl:argument2 rdf:resource="urn:swrl#p"/>
+            </swrl:IndividualPropertyAtom>
+          </rdf:first>
+          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+        </rdf:Description>
+      </rdf:rest>
+    </rdf:Description>
+  </swrl:head>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R7_Recommend</rdfs:label>
+</swrl:Imp>
+
+<swrl:Variable rdf:about="urn:swrl#p"/>
+
+<ManufacturingRequirement rdf:about="#Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Req01 - illustrative single limit (|dev| &lt;= 0.50 mm on every dimension, top Ra &lt;= 5.0 um)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Illustrative acceptance requirement used in the NAMRC 55 study. A limit of 0.50 mm on every dimension is equivalent to MaxAbsDev &lt;= 0.50 mm. The Ra limit is the study's own criterion; ISO 21920-2 defines Ra but sets no acceptance value.</rdfs:comment>
+  <intendedUse rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Visible coarse part: every dimension within 0.50 mm and a smooth top face</intendedUse>
+  <requiredMaxLengthDeviation rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</requiredMaxLengthDeviation>
+  <requiredMaxWidthDeviation rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</requiredMaxWidthDeviation>
+  <requiredMaxHeightDeviation rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</requiredMaxHeightDeviation>
+  <requiredMaxRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">5.0</requiredMaxRaValue>
+</ManufacturingRequirement>
+
+<QualityAssessment rdf:about="#Assessment_S01_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result01"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S01 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S02_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result02"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S02 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S03_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result03"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S03 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S04_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result04"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S04 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S05_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result05"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S05 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S06_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result06"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S06 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S07_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result07"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S07 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S08_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result08"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S08 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S09_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result09"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S09 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S10_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result10"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S10 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S11_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result11"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S11 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S12_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result12"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S12 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S13_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result13"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S13 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S14_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result14"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S14 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S15_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result15"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S15 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S16_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result16"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S16 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S17_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result17"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S17 against Req01</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S18_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result18"/>
+  <againstRequirement rdf:resource="#Req01"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S18 against Req01</rdfs:label>
+</QualityAssessment>
+
+<SettingEvaluation rdf:about="#SettingEval_PS01_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS01"/>
+  <forRequirement rdf:resource="#Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S01_Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S02_Req01"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS01 against Req01 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS01; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS02_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS02"/>
+  <forRequirement rdf:resource="#Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S04_Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S03_Req01"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS02 against Req01 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS02; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS03_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS03"/>
+  <forRequirement rdf:resource="#Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S06_Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S05_Req01"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS03 against Req01 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS03; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS04_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS04"/>
+  <forRequirement rdf:resource="#Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S07_Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S08_Req01"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS04 against Req01 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS04; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS05_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS05"/>
+  <forRequirement rdf:resource="#Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S09_Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S10_Req01"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS05 against Req01 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS05; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS06_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS06"/>
+  <forRequirement rdf:resource="#Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S12_Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S11_Req01"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS06 against Req01 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS06; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS07_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS07"/>
+  <forRequirement rdf:resource="#Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S14_Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S13_Req01"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS07 against Req01 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS07; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS08_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS08"/>
+  <forRequirement rdf:resource="#Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S16_Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S15_Req01"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS08 against Req01 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS08; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS09_Req01">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS09"/>
+  <forRequirement rdf:resource="#Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S18_Req01"/>
+  <coversAssessment rdf:resource="#Assessment_S17_Req01"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS09 against Req01 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS09; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<ManufacturingRequirement rdf:about="#Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Req02 - ISO 2768-1 class m (per dimension) + top Ra &lt;= 5.0 um</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dimensional limits are the ISO 2768-1:1989 medium-class permissible deviations for the nominal sizes of the coupon: length 60 mm (over 30-120 mm: +/-0.3 mm), width 10 mm (over 6-30 mm: +/-0.2 mm), height 3 mm (0.5-3 mm: +/-0.1 mm). ISO 2768-1 is written primarily for machined parts and is applied here as a reference tolerance. The Ra limit is the study's own illustrative criterion, not taken from a standard.</rdfs:comment>
+  <intendedUse rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Fit-check part: general tolerances ISO 2768-1 class m and a smooth top face</intendedUse>
+  <requiredMaxLengthDeviation rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3</requiredMaxLengthDeviation>
+  <requiredMaxWidthDeviation rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.2</requiredMaxWidthDeviation>
+  <requiredMaxHeightDeviation rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.1</requiredMaxHeightDeviation>
+  <requiredMaxRaValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">5.0</requiredMaxRaValue>
+</ManufacturingRequirement>
+
+<QualityAssessment rdf:about="#Assessment_S01_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result01"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S01 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S02_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result02"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S02 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S03_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result03"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S03 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S04_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result04"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S04 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S05_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result05"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S05 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S06_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result06"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S06 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S07_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result07"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S07 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S08_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result08"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S08 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S09_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result09"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S09 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S10_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result10"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S10 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S11_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result11"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S11 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S12_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result12"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S12 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S13_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result13"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S13 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S14_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result14"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S14 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S15_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result15"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S15 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S16_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result16"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S16 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S17_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result17"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S17 against Req02</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S18_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result18"/>
+  <againstRequirement rdf:resource="#Req02"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S18 against Req02</rdfs:label>
+</QualityAssessment>
+
+<SettingEvaluation rdf:about="#SettingEval_PS01_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS01"/>
+  <forRequirement rdf:resource="#Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S01_Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S02_Req02"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS01 against Req02 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS01; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS02_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS02"/>
+  <forRequirement rdf:resource="#Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S04_Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S03_Req02"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS02 against Req02 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS02; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS03_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS03"/>
+  <forRequirement rdf:resource="#Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S05_Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S06_Req02"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS03 against Req02 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS03; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS04_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS04"/>
+  <forRequirement rdf:resource="#Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S08_Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S07_Req02"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS04 against Req02 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS04; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS05_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS05"/>
+  <forRequirement rdf:resource="#Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S09_Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S10_Req02"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS05 against Req02 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS05; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS06_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS06"/>
+  <forRequirement rdf:resource="#Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S11_Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S12_Req02"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS06 against Req02 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS06; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS07_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS07"/>
+  <forRequirement rdf:resource="#Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S13_Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S14_Req02"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS07 against Req02 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS07; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS08_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS08"/>
+  <forRequirement rdf:resource="#Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S16_Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S15_Req02"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS08 against Req02 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS08; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS09_Req02">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS09"/>
+  <forRequirement rdf:resource="#Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S17_Req02"/>
+  <coversAssessment rdf:resource="#Assessment_S18_Req02"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS09 against Req02 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS09; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<DimensionOnlyRequirement rdf:about="#Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Req03 - ISO 2768-1 class c (per dimension), no surface requirement</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dimensional limits are the ISO 2768-1:1989 coarse-class permissible deviations for the coupon nominal sizes: length 60 mm (over 30-120 mm: +/-0.8 mm), width 10 mm (over 6-30 mm: +/-0.5 mm), height 3 mm (0.5-3 mm: +/-0.2 mm). No Ra limit: the part is a DimensionOnlyRequirement, so rule R1b judges it on dimensions only.</rdfs:comment>
+  <intendedUse rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hidden functional part such as a jig or spacer: general tolerances ISO 2768-1 class c and no top-face finish requirement</intendedUse>
+  <requiredMaxLengthDeviation rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.8</requiredMaxLengthDeviation>
+  <requiredMaxWidthDeviation rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.5</requiredMaxWidthDeviation>
+  <requiredMaxHeightDeviation rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.2</requiredMaxHeightDeviation>
+</DimensionOnlyRequirement>
+
+<QualityAssessment rdf:about="#Assessment_S01_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result01"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S01 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S02_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result02"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S02 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S03_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result03"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S03 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S04_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result04"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S04 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S05_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result05"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S05 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S06_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result06"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S06 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S07_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result07"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S07 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S08_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result08"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S08 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S09_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result09"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S09 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S10_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result10"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S10 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S11_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result11"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S11 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S12_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result12"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S12 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S13_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result13"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S13 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S14_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result14"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S14 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S15_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result15"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S15 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S16_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result16"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S16 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S17_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result17"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S17 against Req03</rdfs:label>
+</QualityAssessment>
+
+<QualityAssessment rdf:about="#Assessment_S18_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <assessesResult rdf:resource="#Result18"/>
+  <againstRequirement rdf:resource="#Req03"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Assessment of S18 against Req03</rdfs:label>
+</QualityAssessment>
+
+<SettingEvaluation rdf:about="#SettingEval_PS01_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS01"/>
+  <forRequirement rdf:resource="#Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S01_Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S02_Req03"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS01 against Req03 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS01; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS02_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS02"/>
+  <forRequirement rdf:resource="#Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S04_Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S03_Req03"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS02 against Req03 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS02; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS03_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS03"/>
+  <forRequirement rdf:resource="#Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S05_Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S06_Req03"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS03 against Req03 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS03; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS04_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS04"/>
+  <forRequirement rdf:resource="#Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S07_Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S08_Req03"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS04 against Req03 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS04; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS05_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS05"/>
+  <forRequirement rdf:resource="#Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S09_Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S10_Req03"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS05 against Req03 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS05; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS06_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS06"/>
+  <forRequirement rdf:resource="#Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S12_Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S11_Req03"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS06 against Req03 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS06; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS07_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS07"/>
+  <forRequirement rdf:resource="#Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S13_Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S14_Req03"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS07 against Req03 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS07; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS08_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS08"/>
+  <forRequirement rdf:resource="#Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S15_Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S16_Req03"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS08 against Req03 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS08; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<SettingEvaluation rdf:about="#SettingEval_PS09_Req03">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <evaluatesSetting rdf:resource="#PS09"/>
+  <forRequirement rdf:resource="#Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S17_Req03"/>
+  <coversAssessment rdf:resource="#Assessment_S18_Req03"/>
+  <rdf:type>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#coversAssessment"/>
+      <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+    </owl:Restriction>
+  </rdf:type>
+  <rdf:type rdf:resource="#TwoReplicateEvaluation"/>
+  <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Evaluation of PS09 against Req03 (2 replicates)</rdfs:label>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Cardinality axiom: the experiment printed exactly 2 replicates of PS09; the evaluation covers at most 2 assessments, so the 2 asserted (pairwise different) assessments are all of them.</rdfs:comment>
+</SettingEvaluation>
+
+<owl:AllDifferent>
+  <owl:distinctMembers rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Result01"/>
+    <rdf:Description rdf:about="#Result02"/>
+    <rdf:Description rdf:about="#Result03"/>
+    <rdf:Description rdf:about="#Result04"/>
+    <rdf:Description rdf:about="#Result05"/>
+    <rdf:Description rdf:about="#Result06"/>
+    <rdf:Description rdf:about="#Result07"/>
+    <rdf:Description rdf:about="#Result08"/>
+    <rdf:Description rdf:about="#Result09"/>
+    <rdf:Description rdf:about="#Result10"/>
+    <rdf:Description rdf:about="#Result11"/>
+    <rdf:Description rdf:about="#Result12"/>
+    <rdf:Description rdf:about="#Result13"/>
+    <rdf:Description rdf:about="#Result14"/>
+    <rdf:Description rdf:about="#Result15"/>
+    <rdf:Description rdf:about="#Result16"/>
+    <rdf:Description rdf:about="#Result17"/>
+    <rdf:Description rdf:about="#Result18"/>
+  </owl:distinctMembers>
+</owl:AllDifferent>
+
+<owl:AllDifferent>
+  <owl:distinctMembers rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Req01"/>
+    <rdf:Description rdf:about="#Req02"/>
+    <rdf:Description rdf:about="#Req03"/>
+  </owl:distinctMembers>
+</owl:AllDifferent>
+
+<owl:AllDifferent>
+  <owl:distinctMembers rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Assessment_S01_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S02_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S03_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S04_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S05_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S06_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S07_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S08_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S09_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S10_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S11_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S12_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S13_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S14_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S15_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S16_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S17_Req03"/>
+    <rdf:Description rdf:about="#Assessment_S18_Req03"/>
+  </owl:distinctMembers>
+</owl:AllDifferent>
+
+<owl:AllDifferent>
+  <owl:distinctMembers rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Assessment_S01_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S02_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S03_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S04_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S05_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S06_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S07_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S08_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S09_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S10_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S11_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S12_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S13_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S14_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S15_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S16_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S17_Req02"/>
+    <rdf:Description rdf:about="#Assessment_S18_Req02"/>
+  </owl:distinctMembers>
+</owl:AllDifferent>
+
+<owl:AllDifferent>
+  <owl:distinctMembers rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Assessment_S01_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S02_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S03_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S04_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S05_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S06_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S07_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S08_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S09_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S10_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S11_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S12_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S13_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S14_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S15_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S16_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S17_Req01"/>
+    <rdf:Description rdf:about="#Assessment_S18_Req01"/>
+  </owl:distinctMembers>
+</owl:AllDifferent>
+
+<owl:AllDifferent>
+  <owl:distinctMembers rdf:parseType="Collection">
+    <rdf:Description rdf:about="#DimAccuracy_Instance"/>
+    <rdf:Description rdf:about="#LengthAccuracy_Instance"/>
+    <rdf:Description rdf:about="#WidthAccuracy_Instance"/>
+    <rdf:Description rdf:about="#HeightAccuracy_Instance"/>
+    <rdf:Description rdf:about="#SurfaceQuality_Instance"/>
+  </owl:distinctMembers>
+</owl:AllDifferent>
+
+<owl:AllDifferent>
+  <owl:distinctMembers rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Acceptable_Instance"/>
+    <rdf:Description rdf:about="#Defective_Instance"/>
+  </owl:distinctMembers>
+</owl:AllDifferent>
+
+
+</rdf:RDF>

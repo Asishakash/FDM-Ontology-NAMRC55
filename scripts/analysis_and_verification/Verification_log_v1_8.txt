@@ -1,0 +1,110 @@
+FDM quality ontology v1.8 - verification log (27 Oct 2026)
+==========================================================
+
+1. Why v1.8
+ Your Protégé export of v1.7 (inferred axioms) classified all 27 setting evaluations correctly. With the asserted
+ recommendation types removed and two requirements added at once, Pellet 2.3.1 left the new assessments without
+ outcomes in 5 of 10 runs (deterministic per statement order: Python hash seeds 1 and 2 failed), while reporting the
+ ontology consistent. The delivered v1.7 file was complete in all 16 orders tried. Cause: the nominal closure
+ "coversAssessment only {a1, a2}" combined with the SWRL rules - the same family of Pellet incompleteness as in v1.5.
+
+2. What changed (all data, limits and rules R1-R7 unchanged)
+ - Removed: the nominal closure on every SettingEvaluation; the defined-class equivalences of ProcessRecommendation
+   and NotRecommendedSetting.
+ - Added: coversAssessment max 2 on every SettingEvaluation (exactly two coupons were printed per setting) and the
+   class TwoReplicateEvaluation.
+ - Added rules:
+   R8_RecommendAllReplicates: TwoReplicateEvaluation(?e), coversAssessment(?e, ?a1), coversAssessment(?e, ?a2),
+     differentFrom(?a1, ?a2), hasOutcome(?a1, Acceptable_Instance), hasOutcome(?a2, Acceptable_Instance)
+     -> ProcessRecommendation(?e)
+   R9_NotRecommended: SettingEvaluation(?e), coversAssessment(?e, ?a), hasOutcome(?a, Defective_Instance)
+     -> NotRecommendedSetting(?e)
+   ProcessRecommendation and NotRecommendedSetting stay disjoint. The assessments of each evaluation are declared
+   different, so a third covered assessment violates max 2 (negative test 2).
+ - Scope: R8 is written for two replicates; fdm_dss.add_requirement refuses other replicate counts (an n-replicate
+   design needs its own class and rule).
+ - Final labels: ontology label 'FDM Process-Parameter-Based Quality Classification and Decision Support Ontology';
+   ProcessParameter subclass PrintSpeed renamed FirstLayerSpeed; material label 'PLA (Overture, 1.75 mm)' for all sets.
+ - Metrics: 28 classes, 17 object properties, 22 data properties, 11 SWRL rules, 139 individuals.
+
+3. Full verification (Pellet 2.3.1 via Owlready2, Jena ARQ, independent pandas calculation)
+
+V3 consistency (Pellet 2.3.1): consistent
+Req01: 11 acceptable ['S01', 'S02', 'S05', 'S06', 'S07', 'S08', 'S09', 'S11', 'S12', 'S13', 'S14']
+Req01 D1 ranked recommendations (time s, filament g, worst margin, confidence):
+    PS07   212 s  2.31 g   31.4%  clear
+    PS06   288 s  2.21 g   52.0%  clear
+    PS04   293 s  2.33 g   29.0%  clear
+    PS01   525 s  2.25 g   28.8%  clear
+    PS03   528 s  2.46 g   14.6%  clear
+Req01 D2 closest miss (worst margin, blocking characteristic, replicate):
+    PS02   -642.5%  top Ra  S04
+    PS09  -1376.2%  top Ra  S17
+    PS08  -1927.1%  top Ra  S15
+    PS05  -2001.6%  top Ra  S10
+Req02: 3 acceptable ['S11', 'S12', 'S14']
+Req02 D1 ranked recommendations (time s, filament g, worst margin, confidence):
+    PS06   288 s  2.21 g   16.0%  clear
+Req02 D2 closest miss (worst margin, blocking characteristic, replicate):
+    PS07    -14.3%  length  S13
+    PS04    -18.3%  length  S07
+    PS01    -28.0%  height  S02
+    PS03    -42.3%  length  S06
+    PS02   -642.5%  top Ra  S04
+    PS09  -1376.2%  top Ra  S17
+    PS08  -1927.1%  top Ra  S15
+    PS05  -2001.6%  top Ra  S10
+Req03: 17 acceptable ['S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S09', 'S11', 'S12', 'S13', 'S14', 'S15', 'S16', 'S17', 'S18']
+Req03 D1 ranked recommendations (time s, filament g, worst margin, confidence):
+    PS08   207 s  2.12 g   22.8%  clear
+    PS09   208 s  2.21 g   29.8%  clear
+    PS07   212 s  2.31 g   57.1%  clear
+    PS06   288 s  2.21 g   66.4%  clear
+    PS04   293 s  2.33 g   55.6%  clear
+    PS01   525 s  2.25 g   36.0%  clear
+    PS02   525 s  2.39 g   24.4%  clear
+    PS03   528 s  2.46 g   46.6%  clear
+Req03 D2 closest miss (worst margin, blocking characteristic, replicate):
+    PS05    -15.2%  width  S10
+D3 suitability matrix: PS01: Req01, Req03; PS02: Req03; PS03: Req01, Req03; PS04: Req01, Req03; PS05: none; PS06: Req01, Req02, Req03; PS07: Req01, Req03; PS08: Req03; PS09: Req03
+V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations
+V1d decision queries (D1, D2 per requirement; D3): 0 mismatches
+Negative test 1 (Defective asserted on an assessment the rules make Acceptable): INCONSISTENT as required
+Negative test 2 (third covered assessment beyond coversAssessment max 2): INCONSISTENT as required
+Negative test 3 (Ra limit added to the dimension-only Req03): INCONSISTENT as required
+Edit test (Req02 height limit 0.1 -> 0.2 in the file, 1 literal): Req02 acceptable ['S02', 'S11', 'S12', 'S14']; 0 rule and 0 decision-query mismatches
+New-requirement test (Req04 = Req02 limits, Req05 = |dL|<=0.40, |dW|<=0.25, |dH|<=0.15 mm, dimension-only, added with no rule change): Req04 identical to Req02: True; Req05 recommended ['PS01', 'PS04', 'PS06', 'PS07']; 0 rule and 0 decision-query mismatches
+
+4. Statement-order robustness (two requirements, Req04 = Req02 limits and Req05 dimension-only, added at once)
+   v1.8 file, Python hash seeds 1-12:                          12 of 12 complete
+   Your Protégé-serialized file converted to the v1.8 design,
+   seeds 1-12 (seeds 1 and 2 failed under v1.7):                12 of 12 complete
+   (complete = all 90 assessments have an outcome and every requirement's recommended and not-recommended
+   settings equal the independent calculation)
+
+5. Stability battery, 20 data sets with random top-face Ra (log-uniform 0.5-120 um), rebuilt each time:
+   trial 1: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 2: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 3: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 4: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 5: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 6: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 7: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 8: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 9: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 10: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 11: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 12: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 13: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 14: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 15: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 16: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 17: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 18: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 19: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+   trial 20: V1 rule verification: 0 mismatches over 54 assessments and 27 setting evaluations V1d decision queries (D1, D2 per requirement; D3): 0 mismatches 
+
+6. Competency questions: 24 of 24 runs match (Competency_questions_v1_8.csv). The queries are unchanged from v1.7,
+   so Snap_SPARQL_tests_v1_8.txt (same queries) applies.
+   Protégé 5.6.9 + Pellet plugin + Snap SPARQL 6.0.0 on v1.8 (27 Oct): CQ1 Req01 and CQ4 for Req01, Req02 and Req03
+   returned the expected rows (screenshots v1_8_*).

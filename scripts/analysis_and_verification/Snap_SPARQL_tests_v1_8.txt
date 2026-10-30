@@ -1,0 +1,318 @@
+SNAP SPARQL TESTS - ontology v1.8 (Protégé 5.6.9, Pellet, Snap SPARQL 6.0.0)
+Before you start: open Ontology_FDM_quality_v1_8.rdf, Reasoner > Pellet > Start reasoner (no red warning),
+Window > Tabs > Snap SPARQL Query. For each test: Ctrl+A in the query box, paste the whole block, Execute,
+compare with EXPECTED. Numbers may show more decimals; local names appear as f:PS07 etc.
+Group A (CQ1-CQ6, CQ8) uses only plain patterns and should run as is.
+Group B (CQ7, CQ9, CQ10) uses GROUP BY / BIND / sub-queries. If Snap SPARQL rejects one, run the SIMPLE version under it;
+the full versions were verified with Jena ARQ by cq_v17.py (24/24 match).
+
+====================================================================================================
+TEST 1  CQ1  [Req01]  Which settings are recommended for the requirement (every replicate acceptable)?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps WHERE { ?ps f:recommendsSettingFor f:Req01 . } ORDER BY ?ps
+----------------------------------------------------------------------------------------------------
+EXPECTED: 5 row(s): PS01, PS03, PS04, PS06, PS07
+
+====================================================================================================
+TEST 2  CQ1  [Req02]  Which settings are recommended for the requirement (every replicate acceptable)?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps WHERE { ?ps f:recommendsSettingFor f:Req02 . } ORDER BY ?ps
+----------------------------------------------------------------------------------------------------
+EXPECTED: 1 row(s): PS06
+
+====================================================================================================
+TEST 3  CQ1  [Req03]  Which settings are recommended for the requirement (every replicate acceptable)?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps WHERE { ?ps f:recommendsSettingFor f:Req03 . } ORDER BY ?ps
+----------------------------------------------------------------------------------------------------
+EXPECTED: 8 row(s): PS01, PS02, PS03, PS04, PS06, PS07, PS08, PS09
+
+====================================================================================================
+TEST 4  CQ2  [Req01]  Which specimens are defective, and which limits do they exceed?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s ?c WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req01 ; f:hasOutcome f:Defective_Instance ; f:exceedsLimitOf ?c . } ORDER BY ?s ?c
+----------------------------------------------------------------------------------------------------
+EXPECTED: 13 rows: S03 LengthAccuracy; S03 SurfaceQuality; S04 LengthAccuracy; S04 SurfaceQuality; S10 LengthAccuracy; S10 SurfaceQuality; S10 WidthAccuracy; S15 SurfaceQuality; S16 LengthAccuracy; S16 SurfaceQuality; S17 LengthAccuracy; S17 SurfaceQuality; S18 SurfaceQuality
+
+====================================================================================================
+TEST 5  CQ2  [Req02]  Which specimens are defective, and which limits do they exceed?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s ?c WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req02 ; f:hasOutcome f:Defective_Instance ; f:exceedsLimitOf ?c . } ORDER BY ?s ?c
+----------------------------------------------------------------------------------------------------
+EXPECTED: 35 rows: S01 HeightAccuracy; S01 LengthAccuracy; S02 HeightAccuracy; S03 LengthAccuracy; S03 SurfaceQuality; S03 WidthAccuracy; S04 LengthAccuracy; S04 SurfaceQuality; S04 WidthAccuracy; S05 LengthAccuracy; S06 LengthAccuracy; S06 WidthAccuracy; S07 LengthAccuracy; S07 WidthAccuracy; S08 LengthAccuracy; S08 WidthAccuracy; S09 LengthAccuracy; S09 WidthAccuracy; S10 LengthAccuracy; S10 SurfaceQuality; S10 WidthAccuracy; S13 LengthAccuracy; S13 WidthAccuracy; S15 LengthAccuracy; S15 SurfaceQuality; S15 WidthAccuracy; S16 LengthAccuracy; S16 SurfaceQuality; S16 WidthAccuracy; S17 LengthAccuracy; S17 SurfaceQuality; S17 WidthAccuracy; S18 LengthAccuracy; S18 SurfaceQuality; S18 WidthAccuracy
+
+====================================================================================================
+TEST 6  CQ2  [Req03]  Which specimens are defective, and which limits do they exceed?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s ?c WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req03 ; f:hasOutcome f:Defective_Instance ; f:exceedsLimitOf ?c . } ORDER BY ?s ?c
+----------------------------------------------------------------------------------------------------
+EXPECTED: 1 rows: S10 WidthAccuracy
+
+====================================================================================================
+TEST 7  CQ3  [Req01]  Which acceptable specimen has the smallest maximum deviation?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s ?d WHERE { ?a f:againstRequirement f:Req01 ; f:hasOutcome f:Acceptable_Instance ; f:assessesResult ?r . ?s f:hasResult ?r . ?r f:dimensionalDeviationValue ?d . } ORDER BY ?d
+----------------------------------------------------------------------------------------------------
+EXPECTED: S14 (0.212) in the first row (Snap SPARQL has no LIMIT; Req01: 11 rows, Req02: 3 rows, Req03: 17 rows)
+
+====================================================================================================
+TEST 8  CQ3  [Req02]  Which acceptable specimen has the smallest maximum deviation?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s ?d WHERE { ?a f:againstRequirement f:Req02 ; f:hasOutcome f:Acceptable_Instance ; f:assessesResult ?r . ?s f:hasResult ?r . ?r f:dimensionalDeviationValue ?d . } ORDER BY ?d
+----------------------------------------------------------------------------------------------------
+EXPECTED: S14 (0.212) in the first row (Snap SPARQL has no LIMIT; Req01: 11 rows, Req02: 3 rows, Req03: 17 rows)
+
+====================================================================================================
+TEST 9  CQ3  [Req03]  Which acceptable specimen has the smallest maximum deviation?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s ?d WHERE { ?a f:againstRequirement f:Req03 ; f:hasOutcome f:Acceptable_Instance ; f:assessesResult ?r . ?s f:hasResult ?r . ?r f:dimensionalDeviationValue ?d . } ORDER BY ?d
+----------------------------------------------------------------------------------------------------
+EXPECTED: S14 (0.212) in the first row (Snap SPARQL has no LIMIT; Req01: 11 rows, Req02: 3 rows, Req03: 17 rows)
+
+====================================================================================================
+TEST 10  CQ4  [Req01]  Which settings have at least one defective replicate?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps WHERE { ?e a f:NotRecommendedSetting ; f:forRequirement f:Req01 ; f:evaluatesSetting ?ps . } ORDER BY ?ps
+----------------------------------------------------------------------------------------------------
+EXPECTED: 4 row(s): PS02, PS05, PS08, PS09
+
+====================================================================================================
+TEST 11  CQ4  [Req02]  Which settings have at least one defective replicate?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps WHERE { ?e a f:NotRecommendedSetting ; f:forRequirement f:Req02 ; f:evaluatesSetting ?ps . } ORDER BY ?ps
+----------------------------------------------------------------------------------------------------
+EXPECTED: 8 row(s): PS01, PS02, PS03, PS04, PS05, PS07, PS08, PS09
+
+====================================================================================================
+TEST 12  CQ4  [Req03]  Which settings have at least one defective replicate?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps WHERE { ?e a f:NotRecommendedSetting ; f:forRequirement f:Req03 ; f:evaluatesSetting ?ps . } ORDER BY ?ps
+----------------------------------------------------------------------------------------------------
+EXPECTED: 1 row(s): PS05
+
+====================================================================================================
+TEST 13  CQ5  [Req02]  What evidence supports recommending PS06 for Req02?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s ?l ?w ?h ?ra WHERE { f:SettingEval_PS06_Req02 f:coversAssessment ?a . ?a f:assessesResult ?r ; f:hasOutcome f:Acceptable_Instance . ?s f:hasResult ?r . ?r f:lengthDeviationValue ?l ; f:widthDeviationValue ?w ; f:heightDeviationValue ?h ; f:surfaceRoughnessRaValue ?ra . } ORDER BY ?s
+----------------------------------------------------------------------------------------------------
+EXPECTED: 2 rows: S11  L -0.221  W -0.085  H -0.009  Ra 0.89; S12  L -0.24  W -0.168  H 0.064  Ra 1.119
+
+====================================================================================================
+TEST 14  CQ5  [Req01]  What evidence supports recommending PS07 for Req01?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s ?l ?w ?h ?ra WHERE { f:SettingEval_PS07_Req01 f:coversAssessment ?a . ?a f:assessesResult ?r ; f:hasOutcome f:Acceptable_Instance . ?s f:hasResult ?r . ?r f:lengthDeviationValue ?l ; f:widthDeviationValue ?w ; f:heightDeviationValue ?h ; f:surfaceRoughnessRaValue ?ra . } ORDER BY ?s
+----------------------------------------------------------------------------------------------------
+EXPECTED: 2 rows: S13  L -0.343  W -0.201  H 0.002  Ra 0.901; S14  L -0.212  W -0.087  H 0.002  Ra 1.336
+
+====================================================================================================
+TEST 15  CQ5  [Req03]  What evidence supports recommending PS08 for Req03?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s ?l ?w ?h ?ra WHERE { f:SettingEval_PS08_Req03 f:coversAssessment ?a . ?a f:assessesResult ?r ; f:hasOutcome f:Acceptable_Instance . ?s f:hasResult ?r . ?r f:lengthDeviationValue ?l ; f:widthDeviationValue ?w ; f:heightDeviationValue ?h ; f:surfaceRoughnessRaValue ?ra . } ORDER BY ?s
+----------------------------------------------------------------------------------------------------
+EXPECTED: 2 rows: S15  L -0.464  W -0.251  H -0.042  Ra 101.354; S16  L -0.537  W -0.386  H 0.084  Ra 76.671
+
+====================================================================================================
+TEST 16  CQ6  [Req01]  Which specimens exceed the roughness limit of the requirement?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req01 ; f:exceedsLimitOf f:SurfaceQuality_Instance . } ORDER BY ?s
+----------------------------------------------------------------------------------------------------
+EXPECTED: 7 row(s): S03, S04, S10, S15, S16, S17, S18
+
+====================================================================================================
+TEST 17  CQ6  [Req02]  Which specimens exceed the roughness limit of the requirement?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?s WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req02 ; f:exceedsLimitOf f:SurfaceQuality_Instance . } ORDER BY ?s
+----------------------------------------------------------------------------------------------------
+EXPECTED: 7 row(s): S03, S04, S10, S15, S16, S17, S18
+
+====================================================================================================
+TEST 18  CQ8  [all]  Why was S15 rejected under each requirement (setting, exceeded limits)?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?q ?ps ?c WHERE { f:S15 f:hasParameterSetting ?ps ; f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement ?q ; f:hasOutcome f:Defective_Instance ; f:exceedsLimitOf ?c . } ORDER BY ?q ?c
+----------------------------------------------------------------------------------------------------
+EXPECTED: 4 rows: Req01 PS08 SurfaceQuality; Req02 PS08 LengthAccuracy; Req02 PS08 SurfaceQuality; Req02 PS08 WidthAccuracy
+
+====================================================================================================
+TEST 19  CQ7  [all]  For each setting, which requirements is it recommended for?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?printTime_s (GROUP_CONCAT(DISTINCT ?qn; separator=", ") AS ?recommendedFor) WHERE {
+  ?ps a f:ParameterSetting ; f:estimatedPrintTimeValue ?printTime_s .
+  OPTIONAL { ?ps f:recommendsSettingFor ?q . BIND(STRAFTER(STR(?q), "#") AS ?qn) }
+} GROUP BY ?ps ?printTime_s ORDER BY ?ps
+----------------------------------------------------------------------------------------------------
+EXPECTED: 9 rows: PS01: Req01, Req03; PS02: Req03; PS03: Req01, Req03; PS04: Req01, Req03; PS05: (empty); PS06: Req01, Req02, Req03; PS07: Req01, Req03; PS08: Req03; PS09: Req03
+SIMPLE version (no GROUP BY):
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?q WHERE { ?ps f:recommendsSettingFor ?q . } ORDER BY ?ps ?q
+EXPECTED (simple): 14 rows: PS01 Req01, PS01 Req03, PS02 Req03, PS03 Req01, PS03 Req03, PS04 Req01, PS04 Req03, PS06 Req01, PS06 Req02, PS06 Req03, PS07 Req01, PS07 Req03, PS08 Req03, PS09 Req03 (PS05 absent)
+
+====================================================================================================
+TEST 20  CQ9  [Req01]  Which recommended setting prints fastest (then least filament)?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?printTime_s ?filament_g ?worstMargin ?confidence WHERE {
+ { SELECT ?ps ?printTime_s ?filament_g (MIN(?m) AS ?worstMargin) WHERE {
+  ?ps f:recommendsSettingFor f:Req01 ; f:estimatedPrintTimeValue ?printTime_s ; f:estimatedFilamentMassValue ?filament_g .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req01 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req01 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND("length" AS ?char) }
+  UNION { f:Req01 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND("width" AS ?char) }
+  UNION { f:Req01 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND("height" AS ?char) }
+  UNION { f:Req01 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND("top Ra" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps ?printTime_s ?filament_g }
+ BIND(IF(?worstMargin < 0.1, "marginal", "clear") AS ?confidence)
+} ORDER BY ?printTime_s ?filament_g DESC(?worstMargin)
+----------------------------------------------------------------------------------------------------
+EXPECTED: 5 rows: PS07 212 2.31 0.314 clear; PS06 288 2.21 0.52 clear; PS04 293 2.33 0.29 clear; PS01 525 2.25 0.288 clear; PS03 528 2.46 0.146 clear   (answer = first row: PS07)
+SIMPLE version (ranking without margin):
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?t ?g WHERE { ?ps f:recommendsSettingFor f:Req01 ; f:estimatedPrintTimeValue ?t ; f:estimatedFilamentMassValue ?g . } ORDER BY ?t ?g
+EXPECTED (simple): same settings and order as above, first row PS07
+
+====================================================================================================
+TEST 21  CQ9  [Req02]  Which recommended setting prints fastest (then least filament)?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?printTime_s ?filament_g ?worstMargin ?confidence WHERE {
+ { SELECT ?ps ?printTime_s ?filament_g (MIN(?m) AS ?worstMargin) WHERE {
+  ?ps f:recommendsSettingFor f:Req02 ; f:estimatedPrintTimeValue ?printTime_s ; f:estimatedFilamentMassValue ?filament_g .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req02 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req02 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND("length" AS ?char) }
+  UNION { f:Req02 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND("width" AS ?char) }
+  UNION { f:Req02 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND("height" AS ?char) }
+  UNION { f:Req02 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND("top Ra" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps ?printTime_s ?filament_g }
+ BIND(IF(?worstMargin < 0.1, "marginal", "clear") AS ?confidence)
+} ORDER BY ?printTime_s ?filament_g DESC(?worstMargin)
+----------------------------------------------------------------------------------------------------
+EXPECTED: 1 row: PS06 288 2.21 0.16 clear   (answer = first row: PS06)
+SIMPLE version (ranking without margin):
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?t ?g WHERE { ?ps f:recommendsSettingFor f:Req02 ; f:estimatedPrintTimeValue ?t ; f:estimatedFilamentMassValue ?g . } ORDER BY ?t ?g
+EXPECTED (simple): same settings and order as above, first row PS06
+
+====================================================================================================
+TEST 22  CQ9  [Req03]  Which recommended setting prints fastest (then least filament)?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?printTime_s ?filament_g ?worstMargin ?confidence WHERE {
+ { SELECT ?ps ?printTime_s ?filament_g (MIN(?m) AS ?worstMargin) WHERE {
+  ?ps f:recommendsSettingFor f:Req03 ; f:estimatedPrintTimeValue ?printTime_s ; f:estimatedFilamentMassValue ?filament_g .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req03 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req03 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND("length" AS ?char) }
+  UNION { f:Req03 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND("width" AS ?char) }
+  UNION { f:Req03 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND("height" AS ?char) }
+  UNION { f:Req03 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND("top Ra" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps ?printTime_s ?filament_g }
+ BIND(IF(?worstMargin < 0.1, "marginal", "clear") AS ?confidence)
+} ORDER BY ?printTime_s ?filament_g DESC(?worstMargin)
+----------------------------------------------------------------------------------------------------
+EXPECTED: 8 rows: PS08 207 2.12 0.228; PS09 208 2.21 0.298; PS07 212 2.31 0.571; PS06 288 2.21 0.664; PS04 293 2.33 0.556; PS01 525 2.25 0.36; PS02 525 2.39 0.244; PS03 528 2.46 0.466 (all clear)   (answer = first row: PS08)
+SIMPLE version (ranking without margin):
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?t ?g WHERE { ?ps f:recommendsSettingFor f:Req03 ; f:estimatedPrintTimeValue ?t ; f:estimatedFilamentMassValue ?g . } ORDER BY ?t ?g
+EXPECTED (simple): same settings and order as above, first row PS08
+
+====================================================================================================
+TEST 23  CQ10  [Req02]  Which non-recommended setting came closest, and what blocks it?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?worstMargin ?char ?specimen ?value ?limit WHERE {
+ { SELECT ?ps (MIN(?m) AS ?worstMargin) WHERE {
+  ?e a f:NotRecommendedSetting .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req02 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req02 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND("length" AS ?char) }
+  UNION { f:Req02 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND("width" AS ?char) }
+  UNION { f:Req02 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND("height" AS ?char) }
+  UNION { f:Req02 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND("top Ra" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps }
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req02 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?specimen f:hasResult ?r .
+  { f:Req02 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND("length" AS ?char) }
+  UNION { f:Req02 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND("width" AS ?char) }
+  UNION { f:Req02 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND("height" AS ?char) }
+  UNION { f:Req02 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND("top Ra" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+
+ BIND(?v AS ?value) BIND(?lim AS ?limit)
+ FILTER(?m = ?worstMargin)
+} ORDER BY DESC(?worstMargin) ?ps ?specimen
+----------------------------------------------------------------------------------------------------
+EXPECTED: 8 rows, closest first: PS07 −0.143 length S13 0.343/0.3; PS04 −0.183 length S07 0.355/0.3; PS01 −0.28 height S02 0.128/0.1; PS03 −0.423 length S06 0.427/0.3; PS02 −6.42 top Ra S04 37.124/5; PS09 −13.76 top Ra S17 73.809/5; PS08 −19.27 top Ra S15 101.354/5; PS05 −20.02 top Ra S10 105.08/5   (answer = first row: PS07)
+SIMPLE version (what blocks each non-recommended setting):
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?s ?c WHERE { ?e a f:NotRecommendedSetting ; f:forRequirement f:Req02 ; f:evaluatesSetting ?ps ; f:coversAssessment ?a . ?a f:assessesResult ?r ; f:exceedsLimitOf ?c . ?s f:hasResult ?r . } ORDER BY ?ps ?s ?c
+EXPECTED (simple): the exceeded limits of every failing replicate of the settings listed above (for Req02: same rows as CQ2 for those settings)
+
+====================================================================================================
+TEST 24  CQ10  [Req03]  Which non-recommended setting came closest, and what blocks it?
+----------------------------------------------------------------------------------------------------
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?worstMargin ?char ?specimen ?value ?limit WHERE {
+ { SELECT ?ps (MIN(?m) AS ?worstMargin) WHERE {
+  ?e a f:NotRecommendedSetting .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req03 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req03 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND("length" AS ?char) }
+  UNION { f:Req03 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND("width" AS ?char) }
+  UNION { f:Req03 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND("height" AS ?char) }
+  UNION { f:Req03 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND("top Ra" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps }
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req03 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?specimen f:hasResult ?r .
+  { f:Req03 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND("length" AS ?char) }
+  UNION { f:Req03 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND("width" AS ?char) }
+  UNION { f:Req03 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND("height" AS ?char) }
+  UNION { f:Req03 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND("top Ra" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+
+ BIND(?v AS ?value) BIND(?lim AS ?limit)
+ FILTER(?m = ?worstMargin)
+} ORDER BY DESC(?worstMargin) ?ps ?specimen
+----------------------------------------------------------------------------------------------------
+EXPECTED: 1 row: PS05 −0.152 width S10 0.576/0.5   (answer = first row: PS05)
+SIMPLE version (what blocks each non-recommended setting):
+PREFIX f: <http://www.wcu.edu/ontology/fdm-quality#>
+SELECT ?ps ?s ?c WHERE { ?e a f:NotRecommendedSetting ; f:forRequirement f:Req03 ; f:evaluatesSetting ?ps ; f:coversAssessment ?a . ?a f:assessesResult ?r ; f:exceedsLimitOf ?c . ?s f:hasResult ?r . } ORDER BY ?ps ?s ?c
+EXPECTED (simple): the exceeded limits of every failing replicate of the settings listed above (for Req03: 1 row: PS05 S10 WidthAccuracy_Instance)

@@ -1,0 +1,120 @@
+cq,question,requirement,query,expected,returned,match
+CQ1,Which settings are recommended for the requirement (every replicate acceptable)?,Req01,SELECT ?ps WHERE { ?ps f:recommendsSettingFor f:Req01 . } ORDER BY ?ps,"['PS01', 'PS03', 'PS04', 'PS06', 'PS07']","['PS01', 'PS03', 'PS04', 'PS06', 'PS07']",True
+CQ2,"Which specimens are defective, and which limits do they exceed?",Req01,SELECT ?s ?c WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req01 ; f:hasOutcome f:Defective_Instance ; f:exceedsLimitOf ?c . } ORDER BY ?s ?c,"[('S03', 'LengthAccuracy_Instance'), ('S03', 'SurfaceQuality_Instance'), ('S04', 'LengthAccuracy_Instance'), ('S04', 'SurfaceQuality_Instance'), ('S10', 'LengthAccuracy_Instance'), ('S10', 'SurfaceQuality_Instance'), ('S10', 'WidthAccuracy_Instance'), ('S15', 'SurfaceQuality_Instance'), ('S16', 'LengthAccuracy_Instance'), ('S16', 'SurfaceQuality_Instance'), ('S17', 'LengthAccuracy_Instance'), ('S17', 'SurfaceQuality_Instance'), ('S18', 'SurfaceQuality_Instance')]","[('S03', 'LengthAccuracy_Instance'), ('S03', 'SurfaceQuality_Instance'), ('S04', 'LengthAccuracy_Instance'), ('S04', 'SurfaceQuality_Instance'), ('S10', 'LengthAccuracy_Instance'), ('S10', 'SurfaceQuality_Instance'), ('S10', 'WidthAccuracy_Instance'), ('S15', 'SurfaceQuality_Instance'), ('S16', 'LengthAccuracy_Instance'), ('S16', 'SurfaceQuality_Instance'), ('S17', 'LengthAccuracy_Instance'), ('S17', 'SurfaceQuality_Instance'), ('S18', 'SurfaceQuality_Instance')]",True
+CQ3,Which acceptable specimen has the smallest maximum deviation?,Req01,SELECT ?s ?d WHERE { ?a f:againstRequirement f:Req01 ; f:hasOutcome f:Acceptable_Instance ; f:assessesResult ?r . ?s f:hasResult ?r . ?r f:dimensionalDeviationValue ?d . } ORDER BY ?d LIMIT 1,['S14'],['S14'],True
+CQ4,Which settings have at least one defective replicate?,Req01,SELECT ?ps WHERE { ?e a f:NotRecommendedSetting ; f:forRequirement f:Req01 ; f:evaluatesSetting ?ps . } ORDER BY ?ps,"['PS02', 'PS05', 'PS08', 'PS09']","['PS02', 'PS05', 'PS08', 'PS09']",True
+CQ6,Which specimens exceed the roughness limit of the requirement?,Req01,SELECT ?s WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req01 ; f:exceedsLimitOf f:SurfaceQuality_Instance . } ORDER BY ?s,"['S03', 'S04', 'S10', 'S15', 'S16', 'S17', 'S18']","['S03', 'S04', 'S10', 'S15', 'S16', 'S17', 'S18']",True
+CQ9,Which recommended setting prints fastest (then least filament)?,Req01,"SELECT ?ps ?printTime_s ?filament_g ?worstMargin ?confidence WHERE {
+ { SELECT ?ps ?printTime_s ?filament_g (MIN(?m) AS ?worstMargin) WHERE {
+  ?ps f:recommendsSettingFor f:Req01 ; f:estimatedPrintTimeValue ?printTime_s ; f:estimatedFilamentMassValue ?filament_g .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req01 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req01 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND(""length"" AS ?char) }
+  UNION { f:Req01 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND(""width"" AS ?char) }
+  UNION { f:Req01 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND(""height"" AS ?char) }
+  UNION { f:Req01 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND(""top Ra"" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps ?printTime_s ?filament_g }
+ BIND(IF(?worstMargin < 0.1, ""marginal"", ""clear"") AS ?confidence)
+} ORDER BY ?printTime_s ?filament_g DESC(?worstMargin)",PS07,PS07,True
+CQ1,Which settings are recommended for the requirement (every replicate acceptable)?,Req02,SELECT ?ps WHERE { ?ps f:recommendsSettingFor f:Req02 . } ORDER BY ?ps,['PS06'],['PS06'],True
+CQ2,"Which specimens are defective, and which limits do they exceed?",Req02,SELECT ?s ?c WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req02 ; f:hasOutcome f:Defective_Instance ; f:exceedsLimitOf ?c . } ORDER BY ?s ?c,"[('S01', 'HeightAccuracy_Instance'), ('S01', 'LengthAccuracy_Instance'), ('S02', 'HeightAccuracy_Instance'), ('S03', 'LengthAccuracy_Instance'), ('S03', 'SurfaceQuality_Instance'), ('S03', 'WidthAccuracy_Instance'), ('S04', 'LengthAccuracy_Instance'), ('S04', 'SurfaceQuality_Instance'), ('S04', 'WidthAccuracy_Instance'), ('S05', 'LengthAccuracy_Instance'), ('S06', 'LengthAccuracy_Instance'), ('S06', 'WidthAccuracy_Instance'), ('S07', 'LengthAccuracy_Instance'), ('S07', 'WidthAccuracy_Instance'), ('S08', 'LengthAccuracy_Instance'), ('S08', 'WidthAccuracy_Instance'), ('S09', 'LengthAccuracy_Instance'), ('S09', 'WidthAccuracy_Instance'), ('S10', 'LengthAccuracy_Instance'), ('S10', 'SurfaceQuality_Instance'), ('S10', 'WidthAccuracy_Instance'), ('S13', 'LengthAccuracy_Instance'), ('S13', 'WidthAccuracy_Instance'), ('S15', 'LengthAccuracy_Instance'), ('S15', 'SurfaceQuality_Instance'), ('S15', 'WidthAccuracy_Instance'), ('S16', 'LengthAccuracy_Instance'), ('S16', 'SurfaceQuality_Instance'), ('S16', 'WidthAccuracy_Instance'), ('S17', 'LengthAccuracy_Instance'), ('S17', 'SurfaceQuality_Instance'), ('S17', 'WidthAccuracy_Instance'), ('S18', 'LengthAccuracy_Instance'), ('S18', 'SurfaceQuality_Instance'), ('S18', 'WidthAccuracy_Instance')]","[('S01', 'HeightAccuracy_Instance'), ('S01', 'LengthAccuracy_Instance'), ('S02', 'HeightAccuracy_Instance'), ('S03', 'LengthAccuracy_Instance'), ('S03', 'SurfaceQuality_Instance'), ('S03', 'WidthAccuracy_Instance'), ('S04', 'LengthAccuracy_Instance'), ('S04', 'SurfaceQuality_Instance'), ('S04', 'WidthAccuracy_Instance'), ('S05', 'LengthAccuracy_Instance'), ('S06', 'LengthAccuracy_Instance'), ('S06', 'WidthAccuracy_Instance'), ('S07', 'LengthAccuracy_Instance'), ('S07', 'WidthAccuracy_Instance'), ('S08', 'LengthAccuracy_Instance'), ('S08', 'WidthAccuracy_Instance'), ('S09', 'LengthAccuracy_Instance'), ('S09', 'WidthAccuracy_Instance'), ('S10', 'LengthAccuracy_Instance'), ('S10', 'SurfaceQuality_Instance'), ('S10', 'WidthAccuracy_Instance'), ('S13', 'LengthAccuracy_Instance'), ('S13', 'WidthAccuracy_Instance'), ('S15', 'LengthAccuracy_Instance'), ('S15', 'SurfaceQuality_Instance'), ('S15', 'WidthAccuracy_Instance'), ('S16', 'LengthAccuracy_Instance'), ('S16', 'SurfaceQuality_Instance'), ('S16', 'WidthAccuracy_Instance'), ('S17', 'LengthAccuracy_Instance'), ('S17', 'SurfaceQuality_Instance'), ('S17', 'WidthAccuracy_Instance'), ('S18', 'LengthAccuracy_Instance'), ('S18', 'SurfaceQuality_Instance'), ('S18', 'WidthAccuracy_Instance')]",True
+CQ3,Which acceptable specimen has the smallest maximum deviation?,Req02,SELECT ?s ?d WHERE { ?a f:againstRequirement f:Req02 ; f:hasOutcome f:Acceptable_Instance ; f:assessesResult ?r . ?s f:hasResult ?r . ?r f:dimensionalDeviationValue ?d . } ORDER BY ?d LIMIT 1,['S14'],['S14'],True
+CQ4,Which settings have at least one defective replicate?,Req02,SELECT ?ps WHERE { ?e a f:NotRecommendedSetting ; f:forRequirement f:Req02 ; f:evaluatesSetting ?ps . } ORDER BY ?ps,"['PS01', 'PS02', 'PS03', 'PS04', 'PS05', 'PS07', 'PS08', 'PS09']","['PS01', 'PS02', 'PS03', 'PS04', 'PS05', 'PS07', 'PS08', 'PS09']",True
+CQ6,Which specimens exceed the roughness limit of the requirement?,Req02,SELECT ?s WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req02 ; f:exceedsLimitOf f:SurfaceQuality_Instance . } ORDER BY ?s,"['S03', 'S04', 'S10', 'S15', 'S16', 'S17', 'S18']","['S03', 'S04', 'S10', 'S15', 'S16', 'S17', 'S18']",True
+CQ9,Which recommended setting prints fastest (then least filament)?,Req02,"SELECT ?ps ?printTime_s ?filament_g ?worstMargin ?confidence WHERE {
+ { SELECT ?ps ?printTime_s ?filament_g (MIN(?m) AS ?worstMargin) WHERE {
+  ?ps f:recommendsSettingFor f:Req02 ; f:estimatedPrintTimeValue ?printTime_s ; f:estimatedFilamentMassValue ?filament_g .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req02 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req02 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND(""length"" AS ?char) }
+  UNION { f:Req02 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND(""width"" AS ?char) }
+  UNION { f:Req02 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND(""height"" AS ?char) }
+  UNION { f:Req02 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND(""top Ra"" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps ?printTime_s ?filament_g }
+ BIND(IF(?worstMargin < 0.1, ""marginal"", ""clear"") AS ?confidence)
+} ORDER BY ?printTime_s ?filament_g DESC(?worstMargin)",PS06,PS06,True
+CQ1,Which settings are recommended for the requirement (every replicate acceptable)?,Req03,SELECT ?ps WHERE { ?ps f:recommendsSettingFor f:Req03 . } ORDER BY ?ps,"['PS01', 'PS02', 'PS03', 'PS04', 'PS06', 'PS07', 'PS08', 'PS09']","['PS01', 'PS02', 'PS03', 'PS04', 'PS06', 'PS07', 'PS08', 'PS09']",True
+CQ2,"Which specimens are defective, and which limits do they exceed?",Req03,SELECT ?s ?c WHERE { ?s f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement f:Req03 ; f:hasOutcome f:Defective_Instance ; f:exceedsLimitOf ?c . } ORDER BY ?s ?c,"[('S10', 'WidthAccuracy_Instance')]","[('S10', 'WidthAccuracy_Instance')]",True
+CQ3,Which acceptable specimen has the smallest maximum deviation?,Req03,SELECT ?s ?d WHERE { ?a f:againstRequirement f:Req03 ; f:hasOutcome f:Acceptable_Instance ; f:assessesResult ?r . ?s f:hasResult ?r . ?r f:dimensionalDeviationValue ?d . } ORDER BY ?d LIMIT 1,['S14'],['S14'],True
+CQ4,Which settings have at least one defective replicate?,Req03,SELECT ?ps WHERE { ?e a f:NotRecommendedSetting ; f:forRequirement f:Req03 ; f:evaluatesSetting ?ps . } ORDER BY ?ps,['PS05'],['PS05'],True
+CQ9,Which recommended setting prints fastest (then least filament)?,Req03,"SELECT ?ps ?printTime_s ?filament_g ?worstMargin ?confidence WHERE {
+ { SELECT ?ps ?printTime_s ?filament_g (MIN(?m) AS ?worstMargin) WHERE {
+  ?ps f:recommendsSettingFor f:Req03 ; f:estimatedPrintTimeValue ?printTime_s ; f:estimatedFilamentMassValue ?filament_g .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req03 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req03 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND(""length"" AS ?char) }
+  UNION { f:Req03 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND(""width"" AS ?char) }
+  UNION { f:Req03 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND(""height"" AS ?char) }
+  UNION { f:Req03 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND(""top Ra"" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps ?printTime_s ?filament_g }
+ BIND(IF(?worstMargin < 0.1, ""marginal"", ""clear"") AS ?confidence)
+} ORDER BY ?printTime_s ?filament_g DESC(?worstMargin)",PS08,PS08,True
+CQ5,What evidence supports recommending PS06 for Req02?,Req02,SELECT ?s ?l ?w ?h ?ra WHERE { f:SettingEval_PS06_Req02 f:coversAssessment ?a . ?a f:assessesResult ?r ; f:hasOutcome f:Acceptable_Instance . ?s f:hasResult ?r . ?r f:lengthDeviationValue ?l ; f:widthDeviationValue ?w ; f:heightDeviationValue ?h ; f:surfaceRoughnessRaValue ?ra . } ORDER BY ?s,"[('S11', np.float64(-0.221), np.float64(-0.085), np.float64(-0.009), np.float64(0.89)), ('S12', np.float64(-0.24), np.float64(-0.168), np.float64(0.064), np.float64(1.119))]","[('S11', -0.221, -0.085, -0.009, 0.89), ('S12', -0.24, -0.168, 0.064, 1.119)]",True
+CQ5,What evidence supports recommending PS07 for Req01?,Req01,SELECT ?s ?l ?w ?h ?ra WHERE { f:SettingEval_PS07_Req01 f:coversAssessment ?a . ?a f:assessesResult ?r ; f:hasOutcome f:Acceptable_Instance . ?s f:hasResult ?r . ?r f:lengthDeviationValue ?l ; f:widthDeviationValue ?w ; f:heightDeviationValue ?h ; f:surfaceRoughnessRaValue ?ra . } ORDER BY ?s,"[('S13', np.float64(-0.343), np.float64(-0.201), np.float64(0.002), np.float64(0.901)), ('S14', np.float64(-0.212), np.float64(-0.087), np.float64(0.002), np.float64(1.336))]","[('S13', -0.343, -0.201, 0.002, 0.901), ('S14', -0.212, -0.087, 0.002, 1.336)]",True
+CQ5,What evidence supports recommending PS08 for Req03?,Req03,SELECT ?s ?l ?w ?h ?ra WHERE { f:SettingEval_PS08_Req03 f:coversAssessment ?a . ?a f:assessesResult ?r ; f:hasOutcome f:Acceptable_Instance . ?s f:hasResult ?r . ?r f:lengthDeviationValue ?l ; f:widthDeviationValue ?w ; f:heightDeviationValue ?h ; f:surfaceRoughnessRaValue ?ra . } ORDER BY ?s,"[('S15', np.float64(-0.464), np.float64(-0.251), np.float64(-0.042), np.float64(101.354)), ('S16', np.float64(-0.537), np.float64(-0.386), np.float64(0.084), np.float64(76.671))]","[('S15', -0.464, -0.251, -0.042, 101.354), ('S16', -0.537, -0.386, 0.084, 76.671)]",True
+CQ7,"For each setting, which requirements is it recommended for?",all,"SELECT ?ps ?printTime_s (GROUP_CONCAT(DISTINCT ?qn; separator="", "") AS ?recommendedFor) WHERE {
+  ?ps a f:ParameterSetting ; f:estimatedPrintTimeValue ?printTime_s .
+  OPTIONAL { ?ps f:recommendsSettingFor ?q . BIND(STRAFTER(STR(?q), ""#"") AS ?qn) }
+} GROUP BY ?ps ?printTime_s ORDER BY ?ps","{'PS01': ['Req01', 'Req03'], 'PS02': ['Req03'], 'PS03': ['Req01', 'Req03'], 'PS04': ['Req01', 'Req03'], 'PS05': [], 'PS06': ['Req01', 'Req02', 'Req03'], 'PS07': ['Req01', 'Req03'], 'PS08': ['Req03'], 'PS09': ['Req03']}","{'PS01': ['Req01', 'Req03'], 'PS02': ['Req03'], 'PS03': ['Req01', 'Req03'], 'PS04': ['Req01', 'Req03'], 'PS05': [], 'PS06': ['Req01', 'Req02', 'Req03'], 'PS07': ['Req01', 'Req03'], 'PS08': ['Req03'], 'PS09': ['Req03']}",True
+CQ8,"Why was S15 rejected under each requirement (setting, exceeded limits)?",all,SELECT ?q ?ps ?c WHERE { f:S15 f:hasParameterSetting ?ps ; f:hasResult ?r . ?a f:assessesResult ?r ; f:againstRequirement ?q ; f:hasOutcome f:Defective_Instance ; f:exceedsLimitOf ?c . } ORDER BY ?q ?c,"[('Req01', 'PS08', 'SurfaceQuality_Instance'), ('Req02', 'PS08', 'LengthAccuracy_Instance'), ('Req02', 'PS08', 'SurfaceQuality_Instance'), ('Req02', 'PS08', 'WidthAccuracy_Instance')]","[('Req01', 'PS08', 'SurfaceQuality_Instance'), ('Req02', 'PS08', 'LengthAccuracy_Instance'), ('Req02', 'PS08', 'SurfaceQuality_Instance'), ('Req02', 'PS08', 'WidthAccuracy_Instance')]",True
+CQ10,"Which non-recommended setting came closest, and what blocks it?",Req02,"SELECT ?ps ?worstMargin ?char ?specimen ?value ?limit WHERE {
+ { SELECT ?ps (MIN(?m) AS ?worstMargin) WHERE {
+  ?e a f:NotRecommendedSetting .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req02 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req02 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND(""length"" AS ?char) }
+  UNION { f:Req02 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND(""width"" AS ?char) }
+  UNION { f:Req02 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND(""height"" AS ?char) }
+  UNION { f:Req02 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND(""top Ra"" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps }
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req02 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?specimen f:hasResult ?r .
+  { f:Req02 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND(""length"" AS ?char) }
+  UNION { f:Req02 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND(""width"" AS ?char) }
+  UNION { f:Req02 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND(""height"" AS ?char) }
+  UNION { f:Req02 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND(""top Ra"" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+
+ BIND(?v AS ?value) BIND(?lim AS ?limit)
+ FILTER(?m = ?worstMargin)
+} ORDER BY DESC(?worstMargin) ?ps ?specimen",PS07,PS07,True
+CQ10,"Which non-recommended setting came closest, and what blocks it?",Req03,"SELECT ?ps ?worstMargin ?char ?specimen ?value ?limit WHERE {
+ { SELECT ?ps (MIN(?m) AS ?worstMargin) WHERE {
+  ?e a f:NotRecommendedSetting .
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req03 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?sp f:hasResult ?r .
+  { f:Req03 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND(""length"" AS ?char) }
+  UNION { f:Req03 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND(""width"" AS ?char) }
+  UNION { f:Req03 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND(""height"" AS ?char) }
+  UNION { f:Req03 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND(""top Ra"" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+ } GROUP BY ?ps }
+
+  ?e f:evaluatesSetting ?ps ; f:forRequirement f:Req03 ; f:coversAssessment ?a .
+  ?a f:assessesResult ?r .
+  ?specimen f:hasResult ?r .
+  { f:Req03 f:requiredMaxLengthDeviation ?lim . ?r f:absLengthDeviationValue ?v . BIND(""length"" AS ?char) }
+  UNION { f:Req03 f:requiredMaxWidthDeviation ?lim . ?r f:absWidthDeviationValue ?v . BIND(""width"" AS ?char) }
+  UNION { f:Req03 f:requiredMaxHeightDeviation ?lim . ?r f:absHeightDeviationValue ?v . BIND(""height"" AS ?char) }
+  UNION { f:Req03 f:requiredMaxRaValue ?lim . ?r f:surfaceRoughnessRaValue ?v . BIND(""top Ra"" AS ?char) }
+  BIND((?lim - ?v) / ?lim AS ?m)
+
+ BIND(?v AS ?value) BIND(?lim AS ?limit)
+ FILTER(?m = ?worstMargin)
+} ORDER BY DESC(?worstMargin) ?ps ?specimen",PS05,PS05,True
